@@ -123,7 +123,7 @@ class BlogPostController extends Controller
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('blog/editor', 'public');
-            $url = rtrim(env('APP_URL', 'http://localhost'), '/') . '/storage/' . $path;
+            $url = asset('storage/' . $path);
             
             return response()->json([
                 'url' => $url
