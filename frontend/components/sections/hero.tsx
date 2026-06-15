@@ -94,7 +94,7 @@ export const Hero = () => {
             <StrokedText 
               text="Digital" 
               viewBox="0 0 350 120" 
-              height="clamp(4rem, 11vw, 13rem)"
+              height="clamp(4.5rem, 12vw, 14rem)"
               strokeWidth={1.5}
               letterSpacing="0.01em"
               className="-mt-[1.5vw]"

@@ -10,11 +10,18 @@ use App\Http\Controllers\BlogPostController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\ReviewController;
 
 // Public Routes
 Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
 Route::post('/contact', [LeadController::class, 'store'])->middleware('throttle:10,1');
 Route::post('/appointments/book', [AppointmentController::class, 'book'])->middleware('throttle:10,1');
+
+// Subscriptions - Public list
+Route::get('/subscriptions/plans', [SubscriptionController::class, 'index']);
 
 // Chatbot Routes
 Route::post('/chat', [ChatController::class, 'chat'])->middleware('throttle:15,1');
@@ -26,11 +33,41 @@ Route::get('/blog/posts', [BlogPostController::class, 'index']);
 Route::get('/blog/posts/{slug}', [BlogPostController::class, 'show']);
 Route::post('/blog/comments', [CommentController::class, 'store'])->middleware('throttle:5,1');
 
+// Public Reviews
+Route::get('/reviews/public', [ReviewController::class, 'index']);
+
 // Admin Protected Routes
 Route::middleware('auth:sanctum')->group(function () {
     // Auth
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
+
+    // Projects & Job Progress
+    Route::get('/projects', [ProjectController::class, 'index']);
+    Route::post('/projects', [ProjectController::class, 'store']);
+    Route::patch('/projects/{id}', [ProjectController::class, 'update']);
+    Route::delete('/projects/{id}', [ProjectController::class, 'destroy']);
+    
+    // Deliverables (Milestones)
+    Route::post('/projects/{projectId}/deliverables', [ProjectController::class, 'addDeliverable']);
+    Route::patch('/deliverables/{id}', [ProjectController::class, 'updateDeliverable']);
+
+    // Subscriptions - Management
+    Route::get('/client/subscription', [SubscriptionController::class, 'me']);
+    Route::post('/admin/subscriptions/plans', [SubscriptionController::class, 'storePlan']);
+    Route::post('/admin/subscriptions/assign', [SubscriptionController::class, 'assignToUser']);
+
+    // Invoices
+    Route::get('/invoices', [InvoiceController::class, 'index']);
+    Route::post('/invoices', [InvoiceController::class, 'store']);
+    Route::patch('/invoices/{id}', [InvoiceController::class, 'update']);
+    Route::delete('/invoices/{id}', [InvoiceController::class, 'destroy']);
+
+    // Reviews
+    Route::get('/reviews', [ReviewController::class, 'index']);
+    Route::post('/reviews', [ReviewController::class, 'store']);
+    Route::patch('/reviews/{id}', [ReviewController::class, 'update']);
+    Route::delete('/reviews/{id}', [ReviewController::class, 'destroy']);
 
     // Leads Funnel
     Route::get('/leads', [LeadController::class, 'index']);
@@ -47,6 +84,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/admin/blog/posts', [BlogPostController::class, 'store']);
     Route::patch('/admin/blog/posts/{id}', [BlogPostController::class, 'update']);
     Route::delete('/admin/blog/posts/{id}', [BlogPostController::class, 'destroy']);
+    Route::post('/admin/blog/upload-image', [BlogPostController::class, 'uploadEditorImage']);
 
     // Blog CMS - Comments
     Route::get('/admin/blog/comments', [CommentController::class, 'index']);

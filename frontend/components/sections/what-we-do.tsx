@@ -44,7 +44,7 @@ export const WhatWeDo = () => {
               <StrokedText 
                 text="Strategy," 
                 viewBox="0 0 500 120"
-                height="clamp(3.5rem, 9vw, 7.5rem)"
+                height="clamp(4rem, 11vw, 9rem)"
                 strokeWidth={2}
               />
             </motion.div>
@@ -57,7 +57,7 @@ export const WhatWeDo = () => {
               <StrokedText 
                 text="Development" 
                 viewBox="0 0 700 120"
-                height="clamp(3.5rem, 9vw, 7.5rem)"
+                height="clamp(4rem, 11vw, 9rem)"
                 strokeWidth={2}
               />
             </motion.div>
@@ -79,7 +79,7 @@ export const WhatWeDo = () => {
                 <StrokedText 
                   text="Design" 
                   viewBox="0 0 350 120"
-                  height="clamp(3.5rem, 9vw, 7.5rem)"
+                  height="clamp(4rem, 11vw, 9rem)"
                   strokeWidth={2}
                 />
               </motion.div>

@@ -91,9 +91,6 @@ export default function ContactPage() {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="flex flex-col items-center justify-center mb-8 md:mb-12"
           >
-            {/* The Dot */}
-            <div className="w-2 md:w-3 h-2 md:h-3 bg-white rounded-full mb-8 md:mb-12" />
-
             <div className="flex justify-center items-center gap-3 md:gap-6 mb-6 md:mb-8">
               <span
                 className="text-[15vw] md:text-[8vw] font-black text-white leading-[0.8] tracking-tighter"
@@ -180,23 +177,26 @@ export default function ContactPage() {
                   {error && <p className="text-error text-sm font-bold">{error}</p>}
                   {success && <p className="text-success text-sm font-bold">Your proposal has been submitted! We&apos;ll be in touch soon.</p>}
 
-                  <div className="flex flex-col sm:flex-row items-center gap-4 mt-6 md:mt-8">
+                  <div className="flex flex-col items-start mt-8 md:mt-10">
                     <Button 
                       onClick={handleSubmit}
                       disabled={isSubmitting}
-                      className="w-full sm:w-auto px-10 md:px-12 py-5 md:py-6 h-auto rounded-full font-bold text-lg transition-all duration-300 disabled:opacity-50"
+                      className="w-full sm:w-auto px-10 md:px-12 py-5 md:py-6 h-auto text-lg font-bold"
                     >
                       {isSubmitting ? "Sending..." : "Send Proposal"}
                     </Button>
-                    <span className="text-text-muted font-bold text-xs md:text-sm uppercase tracking-widest py-2">OR</span>
-                    <button 
-                      type="button"
-                      onClick={() => setIsModalOpen(true)}
-                      className="w-full sm:w-auto px-8 py-5 h-auto rounded-full font-bold text-base transition-all duration-300 border-2 border-white/10 text-white hover:border-accent hover:bg-accent/5 flex items-center justify-center gap-3"
-                    >
-                      <Calendar size={20} />
-                      Book a Call
-                    </button>
+                    
+                    <div className="mt-12 md:mt-16 w-full">
+                      <Button 
+                        type="button"
+                        variant="ghost"
+                        onClick={() => setIsModalOpen(true)}
+                        className="w-full sm:w-auto px-8 py-5 h-auto font-bold text-base flex items-center justify-center gap-3"
+                      >
+                        <Calendar size={20} />
+                        Book a Call
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>

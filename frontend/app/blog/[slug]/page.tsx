@@ -7,7 +7,7 @@ import { Navbar } from "@/components/layout/navbar"
 import { Footer } from "@/components/layout/footer"
 import { BlogSection } from "@/components/sections/blog-section"
 import Image from "next/image"
-import { apiRequest } from "@/lib/api"
+import { apiRequest, getStorageUrl } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 
 interface Post {
@@ -148,7 +148,7 @@ export default function BlogPostPage() {
                  className="relative aspect-[16/9] rounded-3xl overflow-hidden mb-24 shadow-2xl"
                >
                  <Image 
-                   src={post.image}
+                   src={getStorageUrl(post.image) || ""}
                    alt={post.title}
                    fill
                    className="object-cover"

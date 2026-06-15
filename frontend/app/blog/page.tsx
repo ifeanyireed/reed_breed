@@ -37,7 +37,7 @@ export default function BlogPage() {
               <StrokedText
                 text="News"
                 viewBox="0 0 350 120"
-                height="clamp(5rem, 10vw, 8rem)"
+                height="clamp(5rem, 12vw, 10rem)"
                 strokeWidth={2}
                 letterSpacing="-0.05em"
               />

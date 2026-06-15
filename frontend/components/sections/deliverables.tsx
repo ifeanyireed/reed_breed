@@ -60,9 +60,6 @@ export const Deliverables = () => {
               variant="service"
               className="group cursor-default h-full bg-surface/50 border-white/5 relative"
             >
-              <a href={`/services#${item.title.toLowerCase().replace(/\s+/g, '-')}`} className="u-link-cover">
-                <span className="u-sr-only">Learn more about {item.title}</span>
-              </a>
               <div className="p-4 bg-accent/10 rounded-2xl text-accent w-fit mb-8 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                 <item.icon size={32} weight="duotone" />
               </div>

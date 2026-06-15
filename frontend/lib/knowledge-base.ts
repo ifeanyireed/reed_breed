@@ -6,7 +6,7 @@ export const REED_BREED_KNOWLEDGE_BASE = `
 - **Director:** Ifeanyi Felix
 - **Tagline:** Intelligence meets Creative Execution.
 - **Mission:** We architect comprehensive growth systems that automate success for SMEs. We are a blend of software engineering, creative design, digital marketing, and AI-powered execution.
-- **Contact:** hello@reedbreed.com or +234 803 542 8870
+- **Contact:** hello@reedbreed.cc or +234 806 702 8859
 
 ## 2. Core Services
 - **AI & Automation:** AI Chatbot Integration, AI-Generated Content, Workflow Optimization, Internal AI Tools.

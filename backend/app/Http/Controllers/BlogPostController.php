@@ -41,10 +41,25 @@ class BlogPostController extends Controller
             'excerpt' => 'nullable|string',
             'category_id' => 'required|exists:categories,id',
             'status' => 'required|in:Draft,Published',
-            'image' => 'nullable|string'
+            'image' => 'nullable' // Could be file or base64
         ]);
 
         $validated['slug'] = Str::slug($validated['title']) . '-' . uniqid();
+
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('blog', 'public');
+            $validated['image'] = $path;
+        } elseif (is_string($request->image) && str_starts_with($request->image, 'data:image')) {
+            // Handle Base64 if sent from frontend
+            $imageData = $request->image;
+            $extension = explode('/', explode(':', substr($imageData, 0, strpos($imageData, ';')))[1])[1];
+            $replace = substr($imageData, 0, strpos($imageData, ',') + 1);
+            $image = str_replace($replace, '', $imageData);
+            $image = str_replace(' ', '+', $image);
+            $imageName = 'blog/' . Str::random(20) . '.' . $extension;
+            \Illuminate\Support\Facades\Storage::disk('public')->put($imageName, base64_decode($image));
+            $validated['image'] = $imageName;
+        }
 
         $post = BlogPost::create($validated);
 
@@ -59,10 +74,32 @@ class BlogPostController extends Controller
         $validated = $request->validate([
             'title' => 'sometimes|string|max:255',
             'content' => 'sometimes|string',
+            'excerpt' => 'sometimes|nullable|string',
             'category_id' => 'sometimes|exists:categories,id',
             'status' => 'sometimes|in:Draft,Published',
-            'image' => 'nullable|string'
+            'image' => 'nullable'
         ]);
+
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($post->image) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($post->image);
+            }
+            $path = $request->file('image')->store('blog', 'public');
+            $validated['image'] = $path;
+        } elseif (is_string($request->image) && str_starts_with($request->image, 'data:image')) {
+            if ($post->image) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($post->image);
+            }
+            $imageData = $request->image;
+            $extension = explode('/', explode(':', substr($imageData, 0, strpos($imageData, ';')))[1])[1];
+            $replace = substr($imageData, 0, strpos($imageData, ',') + 1);
+            $image = str_replace($replace, '', $imageData);
+            $image = str_replace(' ', '+', $image);
+            $imageName = 'blog/' . Str::random(20) . '.' . $extension;
+            \Illuminate\Support\Facades\Storage::disk('public')->put($imageName, base64_decode($image));
+            $validated['image'] = $imageName;
+        }
 
         $post->update($validated);
 
@@ -75,5 +112,24 @@ class BlogPostController extends Controller
         $post = BlogPost::findOrFail($id);
         $post->delete();
         return response()->json(null, 204);
+    }
+
+    // Admin: Upload image from editor
+    public function uploadEditorImage(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|image|max:5120', // Max 5MB
+        ]);
+
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('blog/editor', 'public');
+            $url = rtrim(env('APP_URL', 'http://localhost'), '/') . '/storage/' . $path;
+            
+            return response()->json([
+                'url' => $url
+            ]);
+        }
+
+        return response()->json(['message' => 'Upload failed'], 400);
     }
 }

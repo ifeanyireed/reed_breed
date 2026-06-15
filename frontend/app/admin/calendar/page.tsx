@@ -27,6 +27,7 @@ interface Appointment {
   type: string
   status: string
   notes: string | null
+  meeting_url: string | null
 }
 
 export default function CalendarPage() {
@@ -245,6 +246,17 @@ export default function CalendarPage() {
                        </span>
                     </div>
                     <p className="text-sm text-text-muted">{appt.email} • {appt.type}</p>
+                    {appt.meeting_url && (
+                      <a 
+                        href={appt.meeting_url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 mt-2 px-3 py-1 bg-accent/10 text-accent rounded-lg text-xs font-bold hover:bg-accent hover:text-white transition-all"
+                      >
+                        <VideoCamera size={14} />
+                        Join Call
+                      </a>
+                    )}
                     {appt.notes && <p className="text-xs text-text-secondary mt-2 line-clamp-1 italic">"{appt.notes}"</p>}
                   </div>
                 </div>

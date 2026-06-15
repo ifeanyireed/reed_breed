@@ -11,7 +11,11 @@ import {
   Gear, 
   SignOut,
   House,
-  Calendar
+  Calendar,
+  Briefcase,
+  Crown,
+  Receipt,
+  Star
 } from "phosphor-react"
 
 import { ProtectedRoute } from "@/components/auth/protected-route"
@@ -19,6 +23,10 @@ import { useAuth } from "@/context/auth-context"
 
 const sidebarItems = [
   { label: "Leads Funnel", icon: Users, href: "/admin" },
+  { label: "Client Projects", icon: Briefcase, href: "/admin/projects" },
+  { label: "Subscriptions", icon: Crown, href: "/admin/subscriptions" },
+  { label: "Invoices", icon: Receipt, href: "/admin/invoices" },
+  { label: "Reviews", icon: Star, href: "/admin/reviews" },
   { label: "Blog CMS", icon: Article, href: "/admin/blog" },
   { label: "Calendar", icon: Calendar, href: "/admin/calendar" },
 ]
@@ -49,6 +57,7 @@ export default function AdminLayout({
                 alt="Reed Breed" 
                 fill 
                 className="object-contain object-left group-hover:opacity-80 transition-opacity" 
+                priority={true}
               />
             </Link>
           </div>

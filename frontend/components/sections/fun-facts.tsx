@@ -47,7 +47,7 @@ export const FunFacts = () => {
                 <StrokedText 
                   text={fact.label} 
                   viewBox={`0 0 ${fact.label.length * 55} 120`}
-                  height="clamp(2.5rem, 6vw, 5rem)"
+                  height="clamp(3rem, 7vw, 6.5rem)"
                   strokeWidth={2}
                   letterSpacing="-0.05em"
                 />

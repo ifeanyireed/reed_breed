@@ -18,7 +18,7 @@ import {
 import { StrokedText } from "@/components/ui/stroked-text"
 import Image from "next/image"
 import Link from "next/link"
-import { apiRequest } from "@/lib/api"
+import { apiRequest, getStorageUrl } from "@/lib/api"
 import { useAuth } from "@/context/auth-context"
 
 interface BlogPost {
@@ -245,7 +245,7 @@ export default function BlogCMS() {
                   <div className="relative aspect-video overflow-hidden">
                      {post.image ? (
                        <Image 
-                        src={post.image} 
+                        src={getStorageUrl(post.image) || ""} 
                         alt={post.title} 
                         fill 
                         className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"

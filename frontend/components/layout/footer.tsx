@@ -81,7 +81,7 @@ export const Footer = () => {
 
       {/* Bottom Section - Brand & Info */}
       <div className="bg-void text-text-secondary pt-20 md:pt-24 pb-0 px-6 md:px-12 lg:px-24">
-        <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-20 lg:gap-32 mb-16 md:mb-20">
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-20 lg:gap-32 mb-16 md:mb-20">
           {/* Left Side */}
           <div className="flex flex-col items-start">
             <Link href="/" className="mb-6">
@@ -116,18 +116,6 @@ export const Footer = () => {
             </div>
           </div>
 
-          {/* Center Side - Links */}
-          <div className="flex flex-col items-start md:mx-auto">
-             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40 mb-8 md:mb-10">Exploration</p>
-             <div className="flex flex-col gap-5">
-                <Link href="/about" className="text-xl md:text-2xl font-bold text-white hover:text-accent transition-colors tracking-tighter">About</Link>
-                <Link href="/services" className="text-xl md:text-2xl font-bold text-white hover:text-accent transition-colors tracking-tighter">Services</Link>
-                <Link href="/industries" className="text-xl md:text-2xl font-bold text-white hover:text-accent transition-colors tracking-tighter">Industries</Link>
-                <Link href="/work" className="text-xl md:text-2xl font-bold text-white hover:text-accent transition-colors tracking-tighter">Our Work</Link>
-                <Link href="/blog" className="text-xl md:text-2xl font-bold text-white hover:text-accent transition-colors tracking-tighter">Latest News</Link>
-             </div>
-          </div>
-
           {/* Right Side */}
           <div className="flex flex-col items-start md:ml-auto text-left w-full md:w-max">
             <p
@@ -156,7 +144,7 @@ export const Footer = () => {
 
         <div className="py-8 border-t border-white/5 flex justify-center items-center">
           <p className="text-text-muted font-medium tracking-tighter text-sm md:text-base">
-            © 2026 Reed Breed Ai. All Rights Reserved.
+            © 2026 Reed Breed Creative Consulting. All Rights Reserved.
           </p>
         </div>
       </div>

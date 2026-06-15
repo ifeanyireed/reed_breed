@@ -20,6 +20,7 @@ export const ManualEntryModal = ({ isOpen, onClose, onSaved }: ManualEntryModalP
   const [time, setTime] = React.useState("")
   const [type, setType] = React.useState("discovery")
   const [notes, setNotes] = React.useState("")
+  const [meetingUrl, setMeetingUrl] = React.useState("")
   const [loading, setLoading] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
 
@@ -50,6 +51,7 @@ export const ManualEntryModal = ({ isOpen, onClose, onSaved }: ManualEntryModalP
           time,
           type: typeMap[type] || type,
           notes,
+          meeting_url: meetingUrl || null,
           status: 'Upcoming'
         })
       }, getToken())
@@ -62,6 +64,7 @@ export const ManualEntryModal = ({ isOpen, onClose, onSaved }: ManualEntryModalP
         setTime("")
         setType("discovery")
         setNotes("")
+        setMeetingUrl("")
         onSaved?.()
         onClose()
       } else {
@@ -168,6 +171,17 @@ export const ManualEntryModal = ({ isOpen, onClose, onSaved }: ManualEntryModalP
                        <option value="strategy">Strategy Session</option>
                        <option value="consultation">Consultation</option>
                     </select>
+                 </div>
+                 
+                 <div>
+                    <label className="text-xs font-bold uppercase tracking-widest text-text-muted mb-2 block">Meeting Link (Optional)</label>
+                    <input 
+                      type="url" 
+                      value={meetingUrl}
+                      onChange={(e) => setMeetingUrl(e.target.value)}
+                      placeholder="https://zoom.us/j/..." 
+                      className="w-full bg-void border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent placeholder:text-text-muted/50" 
+                    />
                  </div>
                  
                  <div>

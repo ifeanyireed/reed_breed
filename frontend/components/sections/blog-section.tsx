@@ -5,7 +5,7 @@ import { motion } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
 import { StrokedText } from "@/components/ui/stroked-text"
-import { apiRequest } from "@/lib/api"
+import { apiRequest, getStorageUrl } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 
 interface Post {
@@ -82,7 +82,7 @@ export const BlogSection = ({
                 <StrokedText 
                   text={title === "Blog" ? "Blog" : title.split(' ').slice(1).join(' ')} 
                   viewBox="0 0 550 120"
-                  height="clamp(3.5rem, 10vw, 8rem)"
+                  height="clamp(4rem, 11vw, 9rem)"
                   strokeWidth={2}
                   letterSpacing="-0.05em"
                 />
@@ -121,7 +121,7 @@ export const BlogSection = ({
               <div className="relative aspect-[4/3] mb-6 md:mb-8 overflow-hidden rounded-sm bg-surface shadow-xl">
                 {post.image ? (
                   <Image 
-                    src={post.image}
+                    src={getStorageUrl(post.image) || ""}
                     alt={post.title}
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-700 grayscale hover:grayscale-0"

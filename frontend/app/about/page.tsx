@@ -42,7 +42,7 @@ export default function AboutPage() {
               <StrokedText
                 text="Reed Breed"
                 viewBox="0 0 600 120"
-                height="clamp(5rem, 10vw, 8rem)"
+                height="clamp(5rem, 12vw, 10rem)"
                 strokeWidth={2}
                 letterSpacing="-0.05em"
               />

@@ -63,7 +63,7 @@ export const WhoWeAre = () => {
                   <StrokedText 
                     text="Are" 
                     viewBox="0 0 200 120"
-                    height="clamp(4rem, 11vw, 9rem)"
+                    height="clamp(5rem, 13vw, 11rem)"
                     strokeWidth={2}
                     letterSpacing="0.01em"
                   />

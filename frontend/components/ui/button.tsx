@@ -17,9 +17,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const baseStyles = "inline-flex items-center justify-center transition-all duration-200 active:translate-y-0 disabled:opacity-50 disabled:pointer-events-none font-sans font-medium tracking-[-0.01em] h-fit cursor-pointer"
 
     const variants = {
-      primary: "bg-accent !text-[#ffffff] hover:!text-[#ffffff] !opacity-100 rounded-[0.5rem] hover:bg-accent-dim hover:-translate-y-px transition-all",
-      secondary: "bg-surface !text-[#ffffff] hover:!text-[#ffffff] !opacity-100 border border-border rounded-[0.5rem] hover:border-accent",
-      ghost: "bg-transparent !text-[#ffffff] hover:!text-[#ffffff] !opacity-100 border border-border-glow rounded-[0.5rem] hover:border-accent",
+      primary: "bg-accent !text-[#ffffff] hover:!text-[#ffffff] !opacity-100 rounded-full hover:bg-accent-dim hover:-translate-y-px transition-all",
+      secondary: "bg-surface !text-[#ffffff] hover:!text-[#ffffff] !opacity-100 border border-border rounded-full hover:border-accent",
+      ghost: "bg-transparent !text-[#ffffff] hover:!text-[#ffffff] !opacity-100 border border-border-glow rounded-full hover:border-accent",
       text: "bg-transparent text-accent hover:underline underline-offset-4 p-0",
     }
 

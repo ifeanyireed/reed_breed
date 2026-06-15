@@ -80,7 +80,7 @@ const AuthProviderInternal = ({ children }: { children: React.ReactNode }) => {
     if (res.ok) {
       localStorage.setItem('rb_token', data.token)
       setUser(data.user)
-      const redirectTo = searchParams.get('redirect') || '/admin'
+      const redirectTo = searchParams.get('redirect') || (data.user.role === 'admin' ? '/admin' : '/dashboard')
       router.push(redirectTo)
     } else {
       throw new Error(data.message || 'Login failed')
