@@ -97,7 +97,7 @@ export const Testimonials = () => {
             <StrokedText 
               text="Testimonials" 
               viewBox="0 0 700 120"
-              height="clamp(5rem, 12vw, 10rem)"
+              height="clamp(4rem, 12vw, 10rem)"
               strokeWidth={2}
               letterSpacing="-0.05em"
               className="-mt-[1.5vw]"
@@ -105,12 +105,17 @@ export const Testimonials = () => {
           </motion.div>
         </div>
 
-        <div className="relative max-w-6xl mx-auto">
+        <div className="relative max-w-6xl mx-auto px-4 md:px-0">
           <div className="overflow-hidden">
             <motion.div 
-              className="flex gap-12 lg:gap-20"
+              className="flex gap-8 md:gap-12 lg:gap-20"
               animate={{ 
-                x: `calc(-${currentIndex * (100 / 3)}% - ${currentIndex * (80 / 3)}px)` 
+                // Dynamically handle mobile (1 item), tablet (2 items), desktop (3 items)
+                x: typeof window !== 'undefined' && window.innerWidth < 768 
+                  ? `calc(-${currentIndex * 100}% - ${currentIndex * 32}px)`
+                  : typeof window !== 'undefined' && window.innerWidth < 1024
+                    ? `calc(-${currentIndex * 50}% - ${currentIndex * 48}px)`
+                    : `calc(-${currentIndex * (100 / 3)}% - ${currentIndex * (80 / 3)}px)`
               }}
               transition={{ 
                 type: "spring",
@@ -118,13 +123,12 @@ export const Testimonials = () => {
                 damping: 20
               }}
             >
-              {/* Using original design, just added the slider logic */}
               {reviews.map((item, index) => (
                 <div
                   key={`${item.name}-${index}`}
-                  className="flex flex-col items-start w-[calc(33.333%-40px)] lg:w-[calc(33.333%-54px)] shrink-0"
+                  className="flex flex-col items-start w-full md:w-[calc(50%-24px)] lg:w-[calc(33.333%-54px)] shrink-0"
                 >
-                  <div className="relative w-24 h-24 mb-10 overflow-hidden rounded-full">
+                  <div className="relative w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 mb-6 md:mb-8 lg:mb-10 overflow-hidden rounded-full">
                     <Image 
                       src={item.avatar}
                       alt={item.name}
@@ -133,39 +137,28 @@ export const Testimonials = () => {
                     />
                   </div>
                   
-                  <blockquote className="text-xl md:text-2xl font-bold text-white mb-8 leading-snug tracking-tight">
+                  <blockquote className="text-lg md:text-xl lg:text-2xl font-bold text-white mb-6 md:mb-8 leading-snug tracking-tight">
                     &ldquo;{item.quote}&rdquo;
                   </blockquote>
                   
-                  <div className="flex flex-col">
-                    <span className="text-white/60 text-lg font-medium">— {item.name}, {item.company}</span>
-                  </div>
-                </div>
-              ))}
-              
-              {/* Loop support: show first few items again if needed */}
-              {reviews.length > 3 && reviews.slice(0, 3).map((item, index) => (
-                <div
-                  key={`loop-${item.name}-${index}`}
-                  className="flex flex-col items-start w-[calc(33.333%-40px)] lg:w-[calc(33.333%-54px)] shrink-0 opacity-50"
-                >
-                  <div className="relative w-24 h-24 mb-10 overflow-hidden rounded-full">
-                    <Image 
-                      src={item.avatar}
-                      alt={item.name}
-                      fill
-                      className="object-cover grayscale"
-                    />
-                  </div>
-                  <blockquote className="text-xl md:text-2xl font-bold text-white mb-8 leading-snug tracking-tight">
-                    &ldquo;{item.quote}&rdquo;
-                  </blockquote>
-                  <div className="flex flex-col">
-                    <span className="text-white/60 text-lg font-medium">— {item.name}, {item.company}</span>
+                  <div className="flex flex-col mt-auto">
+                    <span className="text-white/60 text-base md:text-lg font-medium">— {item.name}</span>
+                    <span className="text-accent/60 text-xs md:text-sm font-bold uppercase tracking-widest">{item.company}</span>
                   </div>
                 </div>
               ))}
             </motion.div>
+          </div>
+          
+          {/* Mobile Pagination Dots */}
+          <div className="flex justify-center gap-2 mt-12 md:hidden">
+             {reviews.map((_, i) => (
+               <button 
+                 key={i}
+                 onClick={() => setCurrentIndex(i)}
+                 className={`w-2 h-2 rounded-full transition-all ${currentIndex === i ? 'w-8 bg-accent' : 'bg-white/20'}`}
+               />
+             ))}
           </div>
         </div>
       </div>

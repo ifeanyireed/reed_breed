@@ -65,3 +65,13 @@ To run your new Laravel PHP backend locally, you just need to use Laravel's buil
      and have custom "Video" or "Live" labels.
 
   I've created a sample links.json for you to get started!
+
+    Your Static Build Workflow:
+
+   1. Build the Project: Run npm run build in the frontend folder.
+   2. Locate the Output: Next.js will generate a folder named out. This folder contains everything (HTML, CSS, JS, Images).
+   3. Deploy to Hostinger:
+       * Open your Hostinger File Manager for reedbreed.cc.
+       * Upload everything inside the out folder directly into your public_html directory.
+       * Crucial Step: Upload the .htaccess.production file I created for you and rename it to exactly .htaccess in that same
+         public_html folder. This ensures your routes like /dashboard and /payment/4 work correctly when refreshed.

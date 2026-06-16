@@ -15,26 +15,30 @@ interface Plan {
 }
 
 // Keep UI metadata separate from DB data
-const planMetadata: Record<string, { desc: string, cta: string, popular: boolean }> = {
+const planMetadata: Record<string, { desc: string, cta: string, popular: boolean, priceRange: string }> = {
   "Starter": {
     desc: "Fast, premium entry point to identify your biggest growth bottlenecks.",
     cta: "Request Growth Audit",
     popular: false,
+    priceRange: "₦250k – ₦500k",
   },
   "Growth": {
     desc: "Complete brand and marketing blueprint with a tailored demo of your future system.",
     cta: "Book Strategy Call",
     popular: true,
+    priceRange: "₦750k – ₦1.5m",
   },
   "Transformation": {
     desc: "Full-scale implementation of strategy, automation, and lead management systems.",
     cta: "Start Transformation",
     popular: false,
+    priceRange: "₦2m – ₦5m+",
   },
   "Retainer": {
     desc: "Ongoing optimization and strategic advisory to ensure predictable growth.",
     cta: "Secure Retainer",
     popular: false,
+    priceRange: "₦400k – ₦1.5m",
   }
 }
 
@@ -48,7 +52,7 @@ export const Pricing = () => {
         const res = await apiRequest('/subscriptions/plans')
         if (res.ok) {
           const data = await res.json()
-          // Sort plans to match visual hierarchy roughly based on ID since price is now a string
+          // Sort plans to match visual hierarchy roughly based on ID
           const sortedData = data.sort((a: Plan, b: Plan) => a.id - b.id)
           setPlans(sortedData)
         }
@@ -79,7 +83,12 @@ export const Pricing = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
           {plans.map((plan, index) => {
-            const meta = planMetadata[plan.name] || { desc: "Custom structured plan for enterprise growth.", cta: "Contact Us", popular: false }
+            const meta = planMetadata[plan.name] || { 
+              desc: "Custom structured plan for enterprise growth.", 
+              cta: "Contact Us", 
+              popular: false,
+              priceRange: "Custom"
+            }
             
             return (
               <motion.div
@@ -104,7 +113,7 @@ export const Pricing = () => {
                   <h3 className="text-h3 font-bold text-text-primary mb-2">{plan.name}</h3>
                   <div className="flex items-baseline gap-1 flex-wrap">
                     <span className="text-2xl lg:text-3xl font-bold text-text-primary">
-                      {plan.priceRange}
+                      {meta.priceRange}
                     </span>
                     {plan.interval !== 'one-off' && <span className="text-text-muted">/{plan.interval === 'monthly' ? 'mo' : plan.interval}</span>}
                   </div>

@@ -113,7 +113,7 @@ export const Chatbot = () => {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(true)}
-        className={`fixed bottom-6 right-6 md:bottom-10 md:right-10 z-[100] w-14 h-14 rounded-full bg-accent text-white shadow-[0_10px_40px_rgba(20,110,245,0.4)] flex items-center justify-center transition-all ${isOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+        className={`fixed bottom-24 right-6 md:bottom-10 md:right-10 z-[100] w-14 h-14 rounded-full bg-accent text-white shadow-[0_10px_40px_rgba(20,110,245,0.4)] flex items-center justify-center transition-all ${isOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
       >
         <ChatCircleDots size={32} weight="duotone" />
       </motion.button>
@@ -125,7 +125,7 @@ export const Chatbot = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="fixed bottom-6 right-6 md:bottom-10 md:right-10 z-[101] w-[calc(100vw-3rem)] md:w-[400px] h-[600px] max-h-[calc(100vh-6rem)] bg-surface border border-white/10 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+            className="fixed bottom-24 right-6 md:bottom-10 md:right-10 z-[101] w-[calc(100vw-3rem)] md:w-[400px] h-[600px] max-h-[calc(100vh-8rem)] bg-surface border border-white/10 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
           >
             <div className="p-4 bg-void border-b border-white/5 flex items-center justify-between">
               <div className="flex items-center gap-3">

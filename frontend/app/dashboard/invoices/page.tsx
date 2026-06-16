@@ -121,7 +121,7 @@ export default function ClientInvoices() {
                     </td>
                     <td className="px-8 py-8 text-right">
                        {inv.pdf_url ? (
-                         <Button variant="ghost" className="h-10 text-[10px] uppercase font-black tracking-widest gap-2 px-4" onClick={() => window.open(inv.pdf_url, '_blank')}>
+                         <Button variant="ghost" className="h-10 text-[10px] uppercase font-black tracking-widest gap-2 px-4" onClick={() => inv.pdf_url && window.open(inv.pdf_url, '_blank')}>
                            <DownloadSimple size={16} />
                            Download PDF
                          </Button>

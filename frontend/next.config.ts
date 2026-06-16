@@ -1,11 +1,17 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Output a static export (generates an 'out' folder)
+  output: 'export',
+  
+  // Ensure that trailing slashes are handled for static hosting
+  trailingSlash: true,
+  
   images: {
     unoptimized: true,
   },
 
-  // Webpack fallback configuration (for production builds)
+  // Webpack fallback configuration
   webpack: (config) => {
     config.module.rules.push({
       test: /\.(glb|gltf)$/,
@@ -14,34 +20,18 @@ const nextConfig: NextConfig = {
     return config;
   },
 
-  // ✅ STABLE TOP-LEVEL KEY (Next.js 16+)
   turbopack: {
     rules: {
-      "*.glb": {
-        type: "asset",
-      },
-      "*.gltf": {
-        type: "asset",
-      },
-      "*.mp4": {
-        type: "asset",
-      },
+      "*.glb": { type: "asset" },
+      "*.gltf": { type: "asset" },
+      "*.mp4": { type: "asset" },
     },
   },
 
-  // Security Headers
   async headers() {
-    return [
-      {
-        source: "/(.*)",
-        headers: [
-          {
-            key: "X-Content-Type-Options",
-            value: "nosniff",
-          },
-        ],
-      },
-    ];
+    // Note: static export does not support custom headers via next.config.js
+    // You must set these in your .htaccess file on Hostinger
+    return [];
   },
 };
 

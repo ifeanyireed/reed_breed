@@ -65,24 +65,18 @@ export const BlogSection = ({
       <div className="container mx-auto px-6">
         {/* Header - Only on Homepage or if specifically titled */}
         {!isFullPage && (
-          <div className="flex flex-col items-center mb-12 md:mb-24">
+          <div className="w-full flex flex-col items-center mb-12 md:mb-24 text-center">
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="flex justify-center items-center gap-3 md:gap-6 mb-8 md:mb-12"
+              className="flex justify-center items-center w-full"
             >
-              <span 
-                className="text-[15vw] md:text-[8vw] font-black text-white leading-[0.8] tracking-tighter"
-                style={{ WebkitTextStroke: '0.5px #ffffff' }}
-              >
-                {title === "Blog" ? "From" : title.split(' ')[0]}
-              </span>
-              <div className="flex items-center -mt-[1.5vw]">
+              <div className="flex items-center">
                 <StrokedText 
-                  text={title === "Blog" ? "Blog" : title.split(' ').slice(1).join(' ')} 
-                  viewBox="0 0 550 120"
-                  height="clamp(4rem, 11vw, 9rem)"
+                  text={title === "Blog" ? "Blog" : title} 
+                  viewBox="0 0 500 120"
+                  height="clamp(4rem, 12vw, 10rem)"
                   strokeWidth={2}
                   letterSpacing="-0.05em"
                 />

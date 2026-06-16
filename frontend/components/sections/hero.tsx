@@ -75,30 +75,31 @@ export const Hero = () => {
         
         <div 
           ref={containerRef}
-          className="w-full flex justify-start items-center overflow-visible"
+          className="w-full flex justify-center md:justify-start items-center overflow-visible px-6 md:px-0"
         >
           <motion.h1
             ref={textRef}
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.15 }}
-            className="font-black text-[#ffffff] whitespace-nowrap flex items-center gap-[0.2em] w-max"
+            className="font-black text-[#ffffff] whitespace-normal md:whitespace-nowrap flex flex-col md:flex-row items-center gap-2 md:gap-[0.2em] w-full md:w-max text-center md:text-left"
             style={{ 
-              fontSize: 'clamp(3.5rem, 10vw, 12rem)',
+              fontSize: 'clamp(3rem, 10vw, 12rem)',
               fontFamily: 'var(--font-dm-sans)',
               letterSpacing: '0.01em',
-              x
+              x: typeof window !== 'undefined' && window.innerWidth < 768 ? 0 : x
             }}
           >
             <span className="md:[webkit-text-stroke:0.5px_#ffffff]">Creative</span>
-            <StrokedText 
-              text="Digital" 
-              viewBox="0 0 350 120" 
-              height="clamp(4.5rem, 12vw, 14rem)"
-              strokeWidth={1.5}
-              letterSpacing="0.01em"
-              className="-mt-[1.5vw]"
-            />
+            <div className="flex items-center -mt-2 md:-mt-[1.5vw]">
+               <StrokedText 
+                 text="Digital" 
+                 viewBox="0 0 350 120" 
+                 height="clamp(4rem, 12vw, 14rem)"
+                 strokeWidth={1.5}
+                 letterSpacing="0.01em"
+               />
+            </div>
             <span className="md:[webkit-text-stroke:0.5px_#ffffff]">Agency</span>
           </motion.h1>
         </div>

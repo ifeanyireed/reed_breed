@@ -25,7 +25,7 @@ const registerSchema = z.object({
 type RegisterValues = z.infer<typeof registerSchema>
 
 export default function RegisterPage() {
-  const { register: registerUser } = useAuth()
+  const { registerUser } = useAuth()
   const { 
     register, 
     handleSubmit, 
@@ -38,9 +38,10 @@ export default function RegisterPage() {
     try {
       await registerUser(data)
     } catch (err: any) {
-      alert(err.message || "Registration failed. Please try again.")
+      alert(err.message || "Registration failed.")
     }
   }
+
 
   return (
     <>

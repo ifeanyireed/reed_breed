@@ -18,12 +18,29 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SupportTicketController;
 
 // Public Routes
+Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:5,1');
 Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
 Route::post('/contact', [LeadController::class, 'store'])->middleware('throttle:10,1');
 Route::post('/appointments/book', [AppointmentController::class, 'book'])->middleware('throttle:10,1');
 
 // Paystack Webhook
 Route::post('/webhooks/paystack', [PaymentController::class, 'handleWebhook']);
+
+// Production Deployment Helper (Delete after use!)
+Route::get('/deploy-helper', function () {
+    if (app()->environment('production')) {
+        try {
+            // Create storage link
+            \Illuminate\Support\Facades\Artisan::call('storage:link');
+            // Run migrations
+            \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+            return response()->json(['message' => 'Symlink created and migrations applied.']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+    return response()->json(['message' => 'Not in production mode.'], 403);
+});
 
 // Subscriptions - Public list
 Route::get('/subscriptions/plans', [SubscriptionController::class, 'index']);

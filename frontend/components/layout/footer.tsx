@@ -119,7 +119,10 @@ export const Footer = () => {
           {/* Quicklinks - Middle Section */}
           <div className="flex flex-col items-start md:col-span-1">
              <h4 className="text-white font-bold uppercase tracking-widest text-xs mb-8">Quicklinks</h4>
-             <div className="flex flex-col gap-4">
+             <div className="flex flex-col gap-2">
+                <Link href="/dashboard" className="text-lg md:text-xl font-medium text-text-muted hover:text-accent transition-colors tracking-tighter leading-[1.1]">
+                   My Account
+                </Link>
                 <Link href="/pricing" className="text-lg md:text-xl font-medium text-text-muted hover:text-accent transition-colors tracking-tighter leading-[1.1]">
                    Pricing
                 </Link>

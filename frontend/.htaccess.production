@@ -1,0 +1,22 @@
+# Next.js Static Export Helper
+# This file ensures that your static URLs (like /dashboard) work correctly
+# when a user refreshes the page on Hostinger.
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  
+  # Redirect /path to /path/ to ensure consistency with trailingSlash: true
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_URI} !(.*)/$
+  RewriteRule ^(.*)$ $1/ [L,R=301]
+
+  # If the request is for a real file (like /favicon.ico), serve it
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteRule ^ - [L]
+
+  # If the request is for /path/, try serving /path/index.html
+  RewriteCond %{DOCUMENT_ROOT}/$1/index.html -f
+  RewriteRule ^(.*)/$ $1/index.html [L]
+
+</IfModule>

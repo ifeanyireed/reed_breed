@@ -5,6 +5,7 @@ import { Star, PaperPlaneRight, Spinner, CheckCircle } from "phosphor-react"
 import { StrokedText } from "@/components/ui/stroked-text"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/context/auth-context"
+import { apiRequest } from "@/lib/api"
 
 export default function ClientReviews() {
   const [rating, setRating] = React.useState(5)
@@ -49,7 +50,7 @@ export default function ClientReviews() {
         <p className="text-text-secondary max-w-md mx-auto">
           Thank you for your feedback. Your review has been sent to our team for approval and will appear on our site shortly.
         </p>
-        <Button variant="outline" onClick={() => setSubmitted(false)} className="mt-8">
+        <Button variant="ghost" onClick={() => setSubmitted(false)} className="mt-8 border-white/10">
           Submit Another Review
         </Button>
       </div>

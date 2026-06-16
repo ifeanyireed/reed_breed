@@ -13,7 +13,7 @@ interface AppointmentModalProps {
   onSuccess?: () => void
 }
 
-export const AppointmentModal = ({ isOpen, onClose }: AppointmentModalProps) => {
+export const AppointmentModal = ({ isOpen, onClose, onSuccess }: AppointmentModalProps) => {
   const { user, getToken } = useAuth()
   const [step, setStep] = React.useState(1)
   const [selectedDate, setSelectedDate] = React.useState<number | null>(null)

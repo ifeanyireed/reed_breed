@@ -3,100 +3,96 @@
 import * as React from "react"
 import { motion } from "framer-motion"
 import { 
-  MagnifyingGlass, 
-  Funnel, 
-  DotsThreeVertical,
-  Export,
-  ArrowUpRight,
-  UserCircle
+  Briefcase, 
+  Receipt,
+  ChatCircleDots,
+  Users,
+  TrendUp,
+  ArrowRight
 } from "phosphor-react"
 import { StrokedText } from "@/components/ui/stroked-text"
 import { useAuth } from "@/context/auth-context"
+import Link from "next/link"
+import { apiRequest } from "@/lib/api"
 
-interface Lead {
-  id: number
-  company: string | null
-  contact: string
-  email: string
-  phone: string | null
-  website: string | null
-  details: string | null
-  status: string
-  industry: string | null
-  created_at: string
-}
-
-export default function LeadsFunnel() {
-  const [leads, setLeads] = React.useState<Lead[]>([])
-  const [loading, setLoading] = React.useState(true)
-  const [searchTerm, setSearchTerm] = React.useState("")
+export default function AdminOverview() {
   const { getToken } = useAuth()
+  const [stats, setStats] = React.useState({
+    projects: 0,
+    invoices: 0,
+    tickets: 0,
+    leads: 0,
+    revenue: 0
+  })
+  const [loading, setLoading] = React.useState(true)
 
-  const fetchLeads = React.useCallback(async () => {
+  const fetchStats = React.useCallback(async () => {
     try {
       const token = getToken()
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api'
-      const res = await fetch(`${apiUrl}/leads`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Accept': 'application/json'
-        }
-      })
-      if (res.ok) {
-        const data = await res.json()
-        setLeads(data)
+      
+      const [projRes, invRes, tickRes, leadsRes] = await Promise.all([
+        apiRequest('/projects', {}, token),
+        apiRequest('/invoices', {}, token),
+        apiRequest('/support/tickets', {}, token),
+        apiRequest('/leads', {}, token)
+      ])
+
+      let projects = 0, invoices = 0, tickets = 0, leads = 0, revenue = 0;
+
+      if (projRes.ok) {
+        const data = await projRes.json()
+        projects = data.filter((p: any) => p.status !== 'Completed').length
       }
+      
+      if (invRes.ok) {
+        const data = await invRes.json()
+        invoices = data.filter((i: any) => i.status === 'Pending').length
+        revenue = data.reduce((acc: number, curr: any) => acc + (curr.status === 'Paid' ? Number(curr.amount) : 0), 0)
+      }
+
+      if (tickRes.ok) {
+        const data = await tickRes.json()
+        tickets = data.filter((t: any) => t.status === 'Open' || t.status === 'In Progress').length
+      }
+
+      if (leadsRes.ok) {
+        const data = await leadsRes.json()
+        leads = data.filter((l: any) => l.status === 'New').length
+      }
+
+      setStats({ projects, invoices, tickets, leads, revenue })
+
     } catch (err) {
-      console.error("Failed to fetch leads", err)
+      console.error("Failed to fetch admin stats", err)
     } finally {
       setLoading(false)
     }
   }, [getToken])
 
   React.useEffect(() => {
-    fetchLeads()
-  }, [fetchLeads])
+    fetchStats()
+  }, [fetchStats])
 
-  const updateLeadStatus = async (id: number, newStatus: string) => {
-    try {
-      const token = getToken()
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api'
-      const res = await fetch(`${apiUrl}/leads/${id}`, {
-        method: 'PATCH',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({ status: newStatus })
-      })
-      if (res.ok) {
-        setLeads(prev => prev.map(l => l.id === id ? { ...l, status: newStatus } : l))
-      }
-    } catch (err) {
-      console.error("Failed to update lead", err)
-    }
-  }
-
-  const filteredLeads = leads.filter(lead => 
-    lead.contact.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    lead.company?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    lead.email.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  const statCards = [
+    { label: "Active Projects", value: stats.projects, icon: Briefcase, color: "text-accent", link: "/admin/projects" },
+    { label: "Pending Invoices", value: stats.invoices, icon: Receipt, color: "text-warning", link: "/admin/invoices" },
+    { label: "Open Tickets", value: stats.tickets, icon: ChatCircleDots, color: "text-error", link: "/admin/support" },
+    { label: "New Leads", value: stats.leads, icon: Users, color: "text-success", link: "/admin/leads" },
+  ]
 
   return (
     <div className="space-y-12">
       {/* Header */}
       <div className="flex justify-between items-end">
         <div className="flex flex-col items-start gap-4">
-          <span className="text-accent font-black tracking-widest text-xs uppercase">Lead Management</span>
+          <span className="text-accent font-black tracking-widest text-xs uppercase">Command Center</span>
           <div className="flex items-center gap-4">
             <h2 className="text-[5.5rem] font-black text-white tracking-tighter leading-[0.8]" style={{ WebkitTextStroke: '0.5px #ffffff' }}>
-              Leads
+              Admin
             </h2>
             <div className="flex items-center -mt-2">
               <StrokedText 
-                text="Funnel" 
+                text="Overview" 
                 viewBox="0 0 450 120"
                 height="4.5rem"
                 strokeWidth={2}
@@ -106,105 +102,73 @@ export default function LeadsFunnel() {
             </div>
           </div>
         </div>
-        
-        <div className="flex gap-4 mb-2">
-          <button className="flex items-center gap-3 px-6 py-3 bg-white/5 border border-white/10 rounded-2xl font-bold hover:bg-white/10 transition-all">
-            <Export size={20} />
-            <span className="text-sm uppercase tracking-widest text-white">Export</span>
-          </button>
-        </div>
       </div>
 
-      {/* Search Bar */}
-      <div className="flex-1 relative max-w-2xl">
-        <MagnifyingGlass className="absolute left-6 top-1/2 -translate-y-1/2 text-text-muted" size={20} />
-        <input 
-          type="text" 
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Search leads, companies or contacts..." 
-          className="w-full bg-white/[0.02] border border-white/5 rounded-2xl py-4 pl-16 pr-6 text-white focus:outline-none focus:border-accent transition-all font-medium placeholder:text-text-muted"
-        />
-      </div>
+      {loading ? (
+        <div className="p-20 text-center text-text-muted font-bold tracking-widest uppercase">Aggregating System Data...</div>
+      ) : (
+        <>
+          {/* Top KPI row */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {statCards.map((stat, i) => (
+              <motion.div 
+                key={stat.label}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+                className="glass-card p-8 rounded-3xl border-white/5 bg-white/[0.01] flex flex-col justify-between group"
+              >
+                 <div className="flex items-center justify-between mb-8">
+                    <div className={`w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center ${stat.color}`}>
+                       <stat.icon size={24} weight="duotone" />
+                    </div>
+                    <Link href={stat.link} className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-text-muted hover:text-white hover:bg-accent transition-colors">
+                       <ArrowRight size={16} weight="bold" className="-rotate-45 group-hover:rotate-0 transition-transform" />
+                    </Link>
+                 </div>
+                 <div>
+                    <h3 className="text-5xl font-black text-white tracking-tighter mb-2">{stat.value}</h3>
+                    <p className="text-xs font-bold text-text-muted uppercase tracking-widest">{stat.label}</p>
+                 </div>
+              </motion.div>
+            ))}
+          </div>
 
-      {/* Table */}
-      <div className="glass-card rounded-[40px] border-white/5 overflow-hidden bg-white/[0.01]">
-        {loading ? (
-          <div className="p-20 text-center text-text-muted font-bold tracking-widest uppercase">Initializing Funnel Data...</div>
-        ) : (
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="border-b border-white/5 bg-white/[0.02]">
-                <th className="px-10 py-6 text-[10px] font-black text-text-muted uppercase tracking-widest">Company / Name</th>
-                <th className="px-10 py-6 text-[10px] font-black text-text-muted uppercase tracking-widest">Contact Info</th>
-                <th className="px-10 py-6 text-[10px] font-black text-text-muted uppercase tracking-widest">Website</th>
-                <th className="px-10 py-6 text-[10px] font-black text-text-muted uppercase tracking-widest w-1/4">Project Details</th>
-                <th className="px-10 py-6 text-[10px] font-black text-text-muted uppercase tracking-widest">Status</th>
-                <th className="px-10 py-6 text-[10px] font-black text-text-muted uppercase tracking-widest text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/5">
-              {filteredLeads.map((lead, i) => (
-                <motion.tr 
-                  key={lead.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                  className="hover:bg-white/[0.03] transition-colors group cursor-pointer"
-                >
-                  <td className="px-10 py-8 text-white">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center text-accent">
-                        <UserCircle size={28} weight="duotone" />
-                      </div>
-                      <div>
-                        <p className="font-black text-white text-lg tracking-tight group-hover:text-accent transition-colors">{lead.company || 'Private Client'}</p>
-                        <p className="text-xs text-text-muted uppercase font-bold tracking-widest">{lead.contact}</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-10 py-8">
-                    <p className="font-bold text-white">{lead.email}</p>
-                    <p className="text-sm text-text-muted">{lead.phone || 'N/A'}</p>
-                  </td>
-                  <td className="px-10 py-8">
-                    <p className="text-sm font-bold text-white opacity-60 truncate max-w-[150px]">{lead.website || 'N/A'}</p>
-                  </td>
-                  <td className="px-10 py-8">
-                    <p className="text-sm text-text-secondary line-clamp-2">{lead.details || 'No additional details provided.'}</p>
-                  </td>
-                  <td className="px-10 py-8">
-                    <select 
-                      value={lead.status}
-                      onChange={(e) => updateLeadStatus(lead.id, e.target.value)}
-                      className={`bg-transparent border-none text-[10px] font-black uppercase tracking-widest focus:ring-0 cursor-pointer ${
-                        lead.status === 'Qualified' ? 'text-success' : 
-                        lead.status === 'New' ? 'text-accent' : 'text-warning'
-                      }`}
-                    >
-                      <option value="New" className="bg-void">New</option>
-                      <option value="In Progress" className="bg-void">In Progress</option>
-                      <option value="Qualified" className="bg-void">Qualified</option>
-                      <option value="Lost" className="bg-void">Lost</option>
-                      <option value="Won" className="bg-void">Won</option>
-                    </select>
-                  </td>
-                  <td className="px-10 py-8 text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <button className="w-10 h-10 rounded-xl hover:bg-white/5 flex items-center justify-center text-text-muted hover:text-white transition-all">
-                        <ArrowUpRight size={20} />
-                      </button>
-                      <button className="w-10 h-10 rounded-xl hover:bg-white/5 flex items-center justify-center text-text-muted hover:text-white transition-all">
-                        <DotsThreeVertical size={24} weight="bold" />
-                      </button>
-                    </div>
-                  </td>
-                </motion.tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
+          {/* Revenue & Quick Actions */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+             <div className="lg:col-span-2 glass-card p-10 rounded-[40px] border-white/5 bg-gradient-to-br from-white/[0.03] to-transparent relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-success/10 blur-[100px] rounded-full pointer-events-none" />
+                <h4 className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] mb-8 flex items-center gap-2">
+                  <TrendUp size={16} className="text-success" /> Lifetime Collected Revenue
+                </h4>
+                <p className="text-6xl md:text-8xl font-black text-white tracking-tighter mb-4">
+                  <span className="text-3xl md:text-5xl text-success mr-2">₦</span>
+                  {(stats.revenue).toLocaleString()}
+                </p>
+                <p className="text-sm text-text-secondary max-w-md">Total revenue aggregated from all invoices marked as "Paid" across the system.</p>
+             </div>
+
+             <div className="glass-card p-10 rounded-[40px] border-accent/20 bg-accent/5 relative overflow-hidden">
+                <div className="absolute -top-12 -right-12 w-32 h-32 bg-accent/10 blur-3xl rounded-full" />
+                <h4 className="text-[10px] font-black text-accent uppercase tracking-[0.2em] mb-6">Quick Actions</h4>
+                <div className="space-y-4">
+                   <Link href="/admin/invoices" className="flex items-center justify-between p-4 bg-void border border-white/5 rounded-2xl hover:border-accent/50 transition-colors group">
+                      <span className="text-sm font-bold text-white">Create New Invoice</span>
+                      <ArrowRight size={16} className="text-text-muted group-hover:text-accent transition-colors" />
+                   </Link>
+                   <Link href="/admin/projects" className="flex items-center justify-between p-4 bg-void border border-white/5 rounded-2xl hover:border-accent/50 transition-colors group">
+                      <span className="text-sm font-bold text-white">Manage Projects</span>
+                      <ArrowRight size={16} className="text-text-muted group-hover:text-accent transition-colors" />
+                   </Link>
+                   <Link href="/admin/calendar" className="flex items-center justify-between p-4 bg-void border border-white/5 rounded-2xl hover:border-accent/50 transition-colors group">
+                      <span className="text-sm font-bold text-white">View Calendar</span>
+                      <ArrowRight size={16} className="text-text-muted group-hover:text-accent transition-colors" />
+                   </Link>
+                </div>
+             </div>
+          </div>
+        </>
+      )}
     </div>
   )
 }

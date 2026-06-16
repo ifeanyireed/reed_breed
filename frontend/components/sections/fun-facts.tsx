@@ -29,30 +29,31 @@ export const FunFacts = () => {
         
         <div className="space-y-4 md:space-y-6">
           {facts.map((fact, index) => (
-            <motion.div 
+            <motion.div
               key={fact.label}
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1, duration: 0.8 }}
               viewport={{ once: true }}
-              className="flex items-center gap-3 md:gap-4"
+              className="flex flex-col md:flex-row md:items-center items-start gap-1 md:gap-4"
             >
-              <span 
-                className="text-[12vw] md:text-[5vw] font-black text-white leading-none tracking-tighter"
+              <span
+                className="text-[15vw] md:text-[5vw] font-black text-white leading-none tracking-tighter"
                 style={{ WebkitTextStroke: '0.5px #ffffff' }}
               >
                 {fact.value}
               </span>
-              <div className="flex items-center -mt-[0.5vw]">
-                <StrokedText 
-                  text={fact.label} 
+              <div className="flex items-center -mt-2 md:-mt-[0.5vw]">
+                <StrokedText
+                  text={fact.label}
                   viewBox={`0 0 ${fact.label.length * 55} 120`}
-                  height="clamp(3rem, 7vw, 6.5rem)"
+                  height="clamp(2rem, 7vw, 6.5rem)"
                   strokeWidth={2}
                   letterSpacing="-0.05em"
                 />
               </div>
             </motion.div>
+
           ))}
         </div>
       </div>

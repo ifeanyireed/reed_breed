@@ -179,19 +179,23 @@ p {
 }
 
 @utility custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-accent) transparent;
+
   &::-webkit-scrollbar {
     width: 6px;
+    height: 2px !important;
   }
   &::-webkit-scrollbar-track {
     background: rgba(255, 255, 255, 0.02);
     border-radius: 10px;
   }
   &::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--color-accent);
     border-radius: 10px;
   }
   &::-webkit-scrollbar-thumb:hover {
-    background: var(--color-accent);
+    background: var(--color-accent-dim);
   }
 }
 
