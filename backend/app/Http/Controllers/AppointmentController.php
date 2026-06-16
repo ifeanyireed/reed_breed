@@ -4,9 +4,32 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Appointment;
+use App\Services\EmailService;
 
 class AppointmentController extends Controller
 {
+    protected $emailService;
+
+    public function __construct(EmailService $emailService)
+    {
+        $this->emailService = $emailService;
+    }
+
+    // Public: Get booked slots for a specific date
+    public function bookedSlots(Request $request)
+    {
+        $date = $request->query('date');
+        if (!$date) {
+            return response()->json([]);
+        }
+
+        $bookedTimes = Appointment::where('date', $date)
+            ->whereIn('status', ['Upcoming', 'Completed'])
+            ->pluck('time');
+
+        return response()->json($bookedTimes);
+    }
+
     // Frontend: Submit new booking
     public function book(Request $request)
     {
@@ -27,6 +50,9 @@ class AppointmentController extends Controller
         }
 
         $appointment = Appointment::create($validated);
+
+        // Notify Admin
+        $this->emailService->notifyAdminNewBooking($appointment);
 
         return response()->json(['message' => 'Appointment booked successfully', 'appointment' => $appointment], 201);
     }
@@ -68,6 +94,10 @@ class AppointmentController extends Controller
 
         $appointment = Appointment::create($validated);
 
+        if (!empty($validated['meeting_url'])) {
+            $this->emailService->notifyClientMeetingLink($appointment);
+        }
+
         return response()->json($appointment, 201);
     }
 
@@ -75,6 +105,7 @@ class AppointmentController extends Controller
     public function update(Request $request, $id)
     {
         $appointment = Appointment::findOrFail($id);
+        $oldUrl = $appointment->meeting_url;
 
         $validated = $request->validate([
             'status' => 'sometimes|in:Upcoming,Completed,Cancelled',
@@ -82,6 +113,11 @@ class AppointmentController extends Controller
         ]);
 
         $appointment->update($validated);
+
+        // If the URL was updated and is not empty, notify the client
+        if (isset($validated['meeting_url']) && $validated['meeting_url'] !== $oldUrl && !empty($validated['meeting_url'])) {
+            $this->emailService->notifyClientMeetingLink($appointment);
+        }
 
         return response()->json($appointment);
     }

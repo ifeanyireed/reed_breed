@@ -22,6 +22,7 @@ Route::post('/register', [AuthController::class, 'register'])->middleware('throt
 Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
 Route::post('/contact', [LeadController::class, 'store'])->middleware('throttle:10,1');
 Route::post('/appointments/book', [AppointmentController::class, 'book'])->middleware('throttle:10,1');
+Route::get('/appointments/booked-slots', [AppointmentController::class, 'bookedSlots']);
 
 // Paystack Webhook
 Route::post('/webhooks/paystack', [PaymentController::class, 'handleWebhook']);

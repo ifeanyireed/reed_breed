@@ -4,9 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Lead;
+use App\Services\EmailService;
 
 class LeadController extends Controller
 {
+    protected $emailService;
+
+    public function __construct(EmailService $emailService)
+    {
+        $this->emailService = $emailService;
+    }
+
     // Frontend: Submit new lead
     public function store(Request $request)
     {
@@ -28,6 +36,9 @@ class LeadController extends Controller
             'details' => $validated['details'] ?? null,
             'status' => 'New',
         ]);
+
+        // Notify Admin
+        $this->emailService->notifyAdminNewLead($lead);
 
         return response()->json(['message' => 'Proposal sent successfully', 'lead' => $lead], 201);
     }

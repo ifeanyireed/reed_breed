@@ -67,7 +67,11 @@ export default function AdminLayout({
 
           <nav className="flex lg:flex-1 lg:flex-col flex-row gap-1 lg:gap-0 lg:space-y-2">
             {sidebarItems.map((item) => {
-              const isActive = pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href))
+              // Ensure exact match for /admin (Overview), else check startsWith for sub-pages
+              const isActive = item.href === '/admin' 
+                ? pathname === '/admin' 
+                : pathname.startsWith(item.href)
+
               return (
                 <Link
                   key={item.href}

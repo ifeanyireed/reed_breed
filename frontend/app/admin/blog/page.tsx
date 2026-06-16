@@ -156,20 +156,20 @@ export default function BlogCMS() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 md:space-y-12">
       {/* Header */}
-      <div className="flex justify-between items-end mb-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-4">
         <div className="flex flex-col items-start gap-4">
           <span className="text-accent font-black tracking-widest text-xs uppercase">Content Management</span>
           <div className="flex items-center gap-4">
-            <h2 className="text-[5.5rem] font-black text-white tracking-tighter leading-[0.8]" style={{ WebkitTextStroke: '0.5px #ffffff' }}>
+            <h2 className="text-[4rem] md:text-[5.5rem] font-black text-white tracking-tighter leading-[0.8]" style={{ WebkitTextStroke: '0.5px #ffffff' }}>
               Blog
             </h2>
             <div className="flex items-center -mt-2">
               <StrokedText 
                 text="CMS" 
                 viewBox="0 0 250 120"
-                height="4.5rem"
+                height="clamp(3rem, 8vw, 4.5rem)"
                 strokeWidth={2}
                 letterSpacing="-0.05em"
                 opacity={1}
@@ -179,8 +179,8 @@ export default function BlogCMS() {
         </div>
         
         {activeTab === 'articles' && (
-          <Link href="/admin/blog/new">
-            <button className="flex items-center gap-3 px-8 py-3 bg-accent text-white rounded-2xl font-bold hover:bg-accent-dim transition-all shadow-lg shadow-accent/20">
+          <Link href="/admin/blog/new" className="w-full md:w-auto">
+            <button className="flex justify-center items-center gap-3 px-8 py-3 w-full md:w-auto bg-accent text-white rounded-2xl font-bold hover:bg-accent-dim transition-all shadow-lg shadow-accent/20">
               <Plus size={20} weight="bold" />
               <span className="text-sm uppercase tracking-widest">New Post</span>
             </button>
@@ -189,7 +189,7 @@ export default function BlogCMS() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 p-2 bg-white/[0.02] border border-white/5 rounded-2xl w-fit">
+      <div className="flex gap-2 p-2 bg-white/[0.02] border border-white/5 rounded-2xl w-full md:w-fit overflow-x-auto custom-scrollbar">
         {[
           { id: 'articles', label: 'Articles', icon: Article },
           { id: 'categories', label: 'Categories & Tags', icon: Tag },
@@ -198,7 +198,7 @@ export default function BlogCMS() {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`relative flex items-center gap-3 px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-widest transition-colors ${
+            className={`relative flex items-center shrink-0 gap-3 px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-widest transition-colors ${
               activeTab === tab.id ? 'text-white' : 'text-text-muted hover:text-white'
             }`}
           >

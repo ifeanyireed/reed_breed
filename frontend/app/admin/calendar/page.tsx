@@ -142,25 +142,25 @@ export default function CalendarPage() {
   }
 
   return (
-    <div className="space-y-12 text-white">
+    <div className="space-y-8 md:space-y-12 text-white">
       <ManualEntryModal 
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
         onSaved={fetchAppointments}
       />
       {/* Header */}
-      <div className="flex justify-between items-end">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 md:gap-0">
         <div className="flex flex-col items-start gap-4">
           <span className="text-accent font-black tracking-widest text-xs uppercase">Schedule Management</span>
           <div className="flex items-center gap-4">
-            <h2 className="text-[5.5rem] font-black text-white tracking-tighter leading-[0.8]" style={{ WebkitTextStroke: '0.5px #ffffff' }}>
+            <h2 className="text-[4rem] md:text-[5.5rem] font-black text-white tracking-tighter leading-[0.8]" style={{ WebkitTextStroke: '0.5px #ffffff' }}>
               Booked
             </h2>
             <div className="flex items-center -mt-2">
               <StrokedText 
                 text="Calls" 
                 viewBox="0 0 250 120"
-                height="4.5rem"
+                height="clamp(3rem, 8vw, 4.5rem)"
                 strokeWidth={2}
                 letterSpacing="-0.05em"
                 opacity={1}
@@ -171,7 +171,7 @@ export default function CalendarPage() {
         
         <button 
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center gap-3 px-8 py-3 bg-accent text-white rounded-2xl font-bold hover:bg-accent-dim transition-all shadow-lg shadow-accent/20 mb-2"
+          className="w-full md:w-auto flex justify-center items-center gap-3 px-8 py-4 md:py-3 bg-accent text-white rounded-2xl font-bold hover:bg-accent-dim transition-all shadow-lg shadow-accent/20 md:mb-2 mt-4 md:mt-0"
         >
           <Plus size={20} weight="bold" />
           <span className="text-sm uppercase tracking-widest">Manual Entry</span>

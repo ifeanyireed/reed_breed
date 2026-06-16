@@ -108,19 +108,19 @@ export default function AdminSupport() {
   }
 
   return (
-    <div className="space-y-12">
-      <div className="flex justify-between items-end">
+    <div className="space-y-8 md:space-y-12">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
         <div className="flex flex-col items-start gap-4">
           <span className="text-accent font-black tracking-widest text-xs uppercase">Ticket Management</span>
           <div className="flex items-center gap-4">
-            <h2 className="text-[5.5rem] font-black text-white tracking-tighter leading-[0.8]" style={{ WebkitTextStroke: '0.5px #ffffff' }}>
+            <h2 className="text-[4rem] md:text-[5.5rem] font-black text-white tracking-tighter leading-[0.8]" style={{ WebkitTextStroke: '0.5px #ffffff' }}>
               Support
             </h2>
             <div className="flex items-center -mt-2">
               <StrokedText 
                 text="Inbox" 
                 viewBox="0 0 200 120"
-                height="4.5rem"
+                height="clamp(3rem, 8vw, 4.5rem)"
                 strokeWidth={2}
                 letterSpacing="-0.05em"
                 opacity={1}
@@ -211,14 +211,15 @@ export default function AdminSupport() {
             {loading ? (
               <div className="p-20 text-center text-text-muted font-bold uppercase tracking-widest text-xs">Loading all support tickets...</div>
             ) : tickets.length === 0 ? (
-              <div className="p-20 text-center glass-card rounded-[40px] border-white/5 bg-white/[0.01]">
+              <div className="p-10 md:p-20 text-center glass-card rounded-[24px] md:rounded-[40px] border-white/5 bg-white/[0.01]">
                  <ChatCircleDots size={48} className="mx-auto text-text-muted mb-6 opacity-20" />
                  <p className="text-white font-bold text-xl">Inbox is empty</p>
                  <p className="text-text-secondary">No support tickets have been created yet.</p>
               </div>
             ) : (
-              <div className="glass-card rounded-[40px] border-white/5 overflow-hidden bg-white/[0.01]">
-                 <table className="w-full text-left border-collapse">
+              <div className="glass-card rounded-[24px] md:rounded-[40px] border-white/5 bg-white/[0.01]">
+                 <div className="overflow-x-auto custom-scrollbar w-full">
+                 <table className="w-full text-left border-collapse min-w-[800px]">
                     <thead>
                        <tr className="border-b border-white/5 bg-white/[0.02]">
                           <th className="px-8 py-6 text-[10px] font-black text-text-muted uppercase tracking-widest">Client</th>
@@ -274,6 +275,7 @@ export default function AdminSupport() {
                        ))}
                     </tbody>
                  </table>
+                 </div>
               </div>
             )}
           </div>

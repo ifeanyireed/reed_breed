@@ -85,20 +85,20 @@ export default function LeadsFunnel() {
   )
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-8 md:space-y-12">
       {/* Header */}
-      <div className="flex justify-between items-end">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
         <div className="flex flex-col items-start gap-4">
           <span className="text-accent font-black tracking-widest text-xs uppercase">Lead Management</span>
           <div className="flex items-center gap-4">
-            <h2 className="text-[5.5rem] font-black text-white tracking-tighter leading-[0.8]" style={{ WebkitTextStroke: '0.5px #ffffff' }}>
+            <h2 className="text-[4rem] md:text-[5.5rem] font-black text-white tracking-tighter leading-[0.8]" style={{ WebkitTextStroke: '0.5px #ffffff' }}>
               Leads
             </h2>
             <div className="flex items-center -mt-2">
               <StrokedText 
                 text="Funnel" 
                 viewBox="0 0 450 120"
-                height="4.5rem"
+                height="clamp(3rem, 8vw, 4.5rem)"
                 strokeWidth={2}
                 letterSpacing="-0.05em"
                 opacity={1}
@@ -107,8 +107,8 @@ export default function LeadsFunnel() {
           </div>
         </div>
         
-        <div className="flex gap-4 mb-2">
-          <button className="flex items-center gap-3 px-6 py-3 bg-white/5 border border-white/10 rounded-2xl font-bold hover:bg-white/10 transition-all">
+        <div className="flex gap-4 w-full md:w-auto">
+          <button className="flex-1 md:flex-none justify-center items-center gap-3 px-6 py-3 bg-white/5 border border-white/10 rounded-2xl font-bold hover:bg-white/10 transition-all flex">
             <Export size={20} />
             <span className="text-sm uppercase tracking-widest text-white">Export</span>
           </button>
@@ -116,7 +116,7 @@ export default function LeadsFunnel() {
       </div>
 
       {/* Search Bar */}
-      <div className="flex-1 relative max-w-2xl">
+      <div className="flex-1 relative w-full md:max-w-2xl">
         <MagnifyingGlass className="absolute left-6 top-1/2 -translate-y-1/2 text-text-muted" size={20} />
         <input 
           type="text" 
@@ -128,12 +128,13 @@ export default function LeadsFunnel() {
       </div>
 
       {/* Table */}
-      <div className="glass-card rounded-[40px] border-white/5 overflow-hidden bg-white/[0.01]">
+      <div className="glass-card rounded-[24px] md:rounded-[40px] border-white/5 bg-white/[0.01]">
         {loading ? (
-          <div className="p-20 text-center text-text-muted font-bold tracking-widest uppercase">Initializing Funnel Data...</div>
+          <div className="p-10 md:p-20 text-center text-text-muted font-bold tracking-widest uppercase text-xs md:text-base">Initializing Funnel Data...</div>
         ) : (
-          <table className="w-full text-left border-collapse">
-            <thead>
+          <div className="overflow-x-auto custom-scrollbar w-full">
+            <table className="w-full text-left border-collapse min-w-[1000px]">
+              <thead>
               <tr className="border-b border-white/5 bg-white/[0.02]">
                 <th className="px-10 py-6 text-[10px] font-black text-text-muted uppercase tracking-widest">Company / Name</th>
                 <th className="px-10 py-6 text-[10px] font-black text-text-muted uppercase tracking-widest">Contact Info</th>
@@ -203,6 +204,7 @@ export default function LeadsFunnel() {
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </div>
     </div>

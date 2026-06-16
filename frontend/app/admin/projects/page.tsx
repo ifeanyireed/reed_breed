@@ -189,19 +189,19 @@ export default function AdminProjects() {
   }
 
   return (
-    <div className="space-y-8 flex flex-col h-[calc(100vh-6rem)]">
-      <div className="flex justify-between items-end flex-shrink-0">
+    <div className="space-y-8 flex flex-col h-[calc(100vh-6rem)] md:h-[calc(100vh-6rem)]">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end flex-shrink-0 gap-6">
         <div className="flex flex-col items-start gap-4">
           <span className="text-accent font-black tracking-widest text-xs uppercase">Progress Tracker</span>
           <div className="flex items-center gap-4">
-            <h2 className="text-[4.5rem] font-black text-white tracking-tighter leading-[0.8]" style={{ WebkitTextStroke: '0.5px #ffffff' }}>
+            <h2 className="text-[3rem] md:text-[4.5rem] font-black text-white tracking-tighter leading-[0.8]" style={{ WebkitTextStroke: '0.5px #ffffff' }}>
               Execution
             </h2>
             <div className="flex items-center -mt-2">
               <StrokedText 
                 text="Funnel" 
                 viewBox="0 0 350 120"
-                height="3.5rem"
+                height="clamp(2.5rem, 6vw, 3.5rem)"
                 strokeWidth={2}
                 letterSpacing="-0.05em"
                 opacity={1}
@@ -210,7 +210,7 @@ export default function AdminProjects() {
           </div>
         </div>
 
-        <Button onClick={() => setIsCreateModalOpen(true)} className="gap-2">
+        <Button onClick={() => setIsCreateModalOpen(true)} className="gap-2 w-full md:w-auto justify-center">
           <Plus size={18} weight="bold" />
           Create Job
         </Button>

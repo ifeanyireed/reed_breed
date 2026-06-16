@@ -152,7 +152,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
 
 export default function EditBlogPost() {
   const params = useParams()
-  const id = params.id as string
+  const id = params.slug as string
   const [title, setTitle] = React.useState("")
   const [categoryId, setCategoryId] = React.useState("")
   const [excerpt, setExcerpt] = React.useState("")

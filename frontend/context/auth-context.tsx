@@ -88,6 +88,28 @@ const AuthProviderInternal = ({ children }: { children: React.ReactNode }) => {
     }
   }
 
+  const registerUser = async (credentials: any) => {
+    const res = await fetch(`${API_URL}/register`, {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(credentials),
+    })
+
+    const data = await res.json()
+
+    if (res.ok) {
+      localStorage.setItem('rb_token', data.token)
+      setUser(data.user)
+      const redirectTo = searchParams.get('redirect') || '/dashboard'
+      router.push(redirectTo)
+    } else {
+      throw new Error(data.message || 'Registration failed')
+    }
+  }
+
   const logout = async () => {
     const token = getToken()
     if (token) {
@@ -105,7 +127,7 @@ const AuthProviderInternal = ({ children }: { children: React.ReactNode }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, getToken }}>
+    <AuthContext.Provider value={{ user, loading, login, registerUser, logout, getToken }}>
       {children}
     </AuthContext.Provider>
   )

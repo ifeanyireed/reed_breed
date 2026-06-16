@@ -100,7 +100,7 @@ export default function AdminReviews() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {reviews.map(review => (
               <div key={review.id} className="glass-card p-10 rounded-[40px] border-white/5 bg-white/[0.01] flex flex-col">
-                <div className="flex justify-between items-start mb-6">
+                <div className="flex justify-between items-start mb-6 flex-wrap gap-y-4">
                     <div>
                       <h3 className="text-xl font-bold text-white mb-1">{review.user?.name || 'Anonymous Client'}</h3>
                       <p className="text-xs text-text-muted uppercase font-bold tracking-widest mb-3">{review.user?.email}</p>
@@ -110,7 +110,7 @@ export default function AdminReviews() {
                           ))}
                       </div>
                     </div>
-                    <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full ${
+                    <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shrink-0 ${
                       review.status === 'Approved' ? 'bg-success/10 text-success' : 
                       review.status === 'Pending' ? 'bg-warning/10 text-warning' : 'bg-error/10 text-error'
                     }`}>

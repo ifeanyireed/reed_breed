@@ -25,6 +25,10 @@ export const AppointmentModal = ({ isOpen, onClose, onSuccess }: AppointmentModa
   const [note, setNote] = React.useState("")
   const [isSubmitting, setIsSubmitting] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
+  
+  // Slots state
+  const [bookedSlots, setBookedSlots] = React.useState<string[]>([])
+  const [isFetchingSlots, setIsFetchingSlots] = React.useState(false)
 
   // Pre-fill user data
   React.useEffect(() => {
@@ -43,6 +47,33 @@ export const AppointmentModal = ({ isOpen, onClose, onSuccess }: AppointmentModa
 
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate()
   const firstDay = new Date(currentYear, currentMonth, 1).getDay()
+
+  // Fetch booked slots when date changes
+  React.useEffect(() => {
+    if (selectedDate) {
+      const fetchSlots = async () => {
+        setIsFetchingSlots(true)
+        setSelectedTime(null) // Reset time when date changes
+        const formattedDate = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(selectedDate).padStart(2, '0')}`
+        try {
+          // Public endpoint, no token needed but we can pass it if we want
+          const res = await apiRequest(`/appointments/booked-slots?date=${formattedDate}`)
+          if (res.ok) {
+            const data = await res.json()
+            setBookedSlots(data)
+          } else {
+            setBookedSlots([])
+          }
+        } catch (err) {
+          console.error(err)
+          setBookedSlots([])
+        } finally {
+          setIsFetchingSlots(false)
+        }
+      }
+      fetchSlots()
+    }
+  }, [selectedDate, currentMonth, currentYear])
 
   // Reset state when closed
   React.useEffect(() => {
@@ -195,19 +226,32 @@ export const AppointmentModal = ({ isOpen, onClose, onSuccess }: AppointmentModa
                           </div>
                         ) : (
                           <div className="space-y-2">
-                            {timeSlots.map(time => (
-                              <button
-                                key={time}
-                                onClick={() => setSelectedTime(time)}
-                                className={`w-full p-3 rounded-xl border text-sm font-bold transition-all flex justify-center ${
-                                  selectedTime === time 
-                                    ? 'bg-accent/10 border-accent text-accent' 
-                                    : 'border-white/10 text-white hover:border-white/30 hover:bg-white/5'
-                                }`}
-                              >
-                                {time}
-                              </button>
-                            ))}
+                            {isFetchingSlots ? (
+                              <div className="h-full flex flex-col items-center justify-center text-center text-text-muted p-4">
+                                <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-accent mb-2"></div>
+                                <p className="text-xs">Checking availability...</p>
+                              </div>
+                            ) : (
+                              timeSlots.map(time => {
+                                const isBooked = bookedSlots.includes(time)
+                                return (
+                                  <button
+                                    key={time}
+                                    disabled={isBooked}
+                                    onClick={() => setSelectedTime(time)}
+                                    className={`w-full p-3 rounded-xl border text-sm font-bold transition-all flex justify-center ${
+                                      isBooked 
+                                        ? 'border-white/5 text-white/20 bg-white/5 cursor-not-allowed line-through'
+                                        : selectedTime === time 
+                                          ? 'bg-accent/10 border-accent text-accent' 
+                                          : 'border-white/10 text-white hover:border-white/30 hover:bg-white/5'
+                                    }`}
+                                  >
+                                    {isBooked ? `${time} (Booked)` : time}
+                                  </button>
+                                )
+                              })
+                            )}
                           </div>
                         )}
                       </div>
