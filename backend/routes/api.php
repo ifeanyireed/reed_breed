@@ -14,11 +14,16 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\SupportTicketController;
 
 // Public Routes
 Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
 Route::post('/contact', [LeadController::class, 'store'])->middleware('throttle:10,1');
 Route::post('/appointments/book', [AppointmentController::class, 'book'])->middleware('throttle:10,1');
+
+// Paystack Webhook
+Route::post('/webhooks/paystack', [PaymentController::class, 'handleWebhook']);
 
 // Subscriptions - Public list
 Route::get('/subscriptions/plans', [SubscriptionController::class, 'index']);
@@ -43,6 +48,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
 
     // Projects & Job Progress
+    Route::get('/admin/clients', [ProjectController::class, 'getClients']);
     Route::get('/projects', [ProjectController::class, 'index']);
     Route::post('/projects', [ProjectController::class, 'store']);
     Route::patch('/projects/{id}', [ProjectController::class, 'update']);
@@ -55,10 +61,13 @@ Route::middleware('auth:sanctum')->group(function () {
     // Subscriptions - Management
     Route::get('/client/subscription', [SubscriptionController::class, 'me']);
     Route::post('/admin/subscriptions/plans', [SubscriptionController::class, 'storePlan']);
+    Route::patch('/admin/subscriptions/plans/{id}', [SubscriptionController::class, 'updatePlan']);
+    Route::delete('/admin/subscriptions/plans/{id}', [SubscriptionController::class, 'destroyPlan']);
     Route::post('/admin/subscriptions/assign', [SubscriptionController::class, 'assignToUser']);
 
     // Invoices
     Route::get('/invoices', [InvoiceController::class, 'index']);
+    Route::get('/invoices/{id}', [InvoiceController::class, 'show']);
     Route::post('/invoices', [InvoiceController::class, 'store']);
     Route::patch('/invoices/{id}', [InvoiceController::class, 'update']);
     Route::delete('/invoices/{id}', [InvoiceController::class, 'destroy']);
@@ -96,4 +105,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/appointments/manual', [AppointmentController::class, 'store']);
     Route::patch('/appointments/{id}', [AppointmentController::class, 'update']);
     Route::delete('/appointments/{id}', [AppointmentController::class, 'destroy']);
+
+    // Support Tickets
+    Route::get('/support/tickets', [SupportTicketController::class, 'index']);
+    Route::post('/support/tickets', [SupportTicketController::class, 'store']);
+    Route::get('/support/tickets/{id}', [SupportTicketController::class, 'show']);
+    Route::post('/support/tickets/{id}/reply', [SupportTicketController::class, 'reply']);
+    Route::patch('/support/tickets/{id}/status', [SupportTicketController::class, 'updateStatus']);
 });

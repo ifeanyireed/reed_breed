@@ -5,13 +5,16 @@ import { motion, AnimatePresence } from "framer-motion"
 import { X, Calendar as CalendarIcon, Clock, VideoCamera } from "phosphor-react"
 import { Button } from "@/components/ui/button"
 import { apiRequest } from "@/lib/api"
+import { useAuth } from "@/context/auth-context"
 
 interface AppointmentModalProps {
   isOpen: boolean
   onClose: () => void
+  onSuccess?: () => void
 }
 
 export const AppointmentModal = ({ isOpen, onClose }: AppointmentModalProps) => {
+  const { user, getToken } = useAuth()
   const [step, setStep] = React.useState(1)
   const [selectedDate, setSelectedDate] = React.useState<number | null>(null)
   const [selectedTime, setSelectedTime] = React.useState<string | null>(null)
@@ -22,6 +25,14 @@ export const AppointmentModal = ({ isOpen, onClose }: AppointmentModalProps) => 
   const [note, setNote] = React.useState("")
   const [isSubmitting, setIsSubmitting] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
+
+  // Pre-fill user data
+  React.useEffect(() => {
+    if (user && isOpen) {
+      setName(user.name || "")
+      setEmail(user.email || "")
+    }
+  }, [user, isOpen])
 
   const today = new Date()
   const currentMonth = today.getMonth()
@@ -70,10 +81,11 @@ export const AppointmentModal = ({ isOpen, onClose }: AppointmentModalProps) => 
           type: 'Discovery Call',
           notes: note
         })
-      })
+      }, getToken())
 
       if (res.ok) {
         setStep(3)
+        onSuccess?.()
       } else {
         const data = await res.json()
         setError(data.message || "Failed to book appointment.")
@@ -206,9 +218,9 @@ export const AppointmentModal = ({ isOpen, onClose }: AppointmentModalProps) => 
                     <Button 
                       onClick={() => setStep(2)}
                       disabled={!selectedDate || !selectedTime}
-                      className={`px-8 py-3 rounded-xl font-bold transition-all ${
+                      className={`px-8 py-3 rounded-xl font-bold transition-all shadow-lg ${
                         selectedDate && selectedTime 
-                          ? 'bg-white text-void hover:bg-white/90' 
+                          ? 'bg-accent text-white hover:bg-accent/90 shadow-accent/20' 
                           : 'bg-white/10 text-white/50 cursor-not-allowed'
                       }`}
                     >

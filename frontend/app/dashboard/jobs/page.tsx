@@ -88,42 +88,43 @@ export default function ClientJobs() {
                         {project.status}
                       </span>
                       <span className="flex items-center gap-2 text-[11px] font-bold text-text-muted uppercase tracking-widest">
-                        <Calendar size={14} />
-                        Commenced: {new Date(project.createdAt).toLocaleDateString()}
+                       <Calendar size={14} />
+                       Commenced: {new Date(project.created_at).toLocaleDateString()}
                       </span>
-                    </div>
-                  </div>
-                  <Button variant="ghost">View Details</Button>
-                </div>
-              </div>
-              
-              <div className="p-8 md:p-10">
-                <h4 className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] mb-8">Deliverables & Milestones</h4>
-                <div className="relative space-y-0">
-                  <div className="absolute left-[11px] top-2 bottom-2 w-[1px] bg-white/5" />
-                  
-                  {project.deliverables?.map((del: any) => (
-                    <div key={del.id} className="relative flex items-start gap-8 pb-10 last:pb-0 group">
+                      </div>
+                      </div>
+                      <Button variant="ghost">View Details</Button>
+                      </div>
+                      </div>
+
+                      <div className="p-8 md:p-10">
+                      <h4 className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] mb-8">Deliverables & Milestones</h4>
+                      <div className="relative space-y-0">
+                      <div className="absolute left-[11px] top-2 bottom-2 w-[1px] bg-white/5" />
+
+                      {project.deliverables?.map((del: any) => (
+                      <div key={del.id} className="relative flex items-start gap-8 pb-10 last:pb-0 group">
                       <div className={`mt-1 h-6 w-6 rounded-full border-2 flex items-center justify-center shrink-0 z-10 transition-all duration-500 ${
-                        del.status === "COMPLETED" 
-                          ? "bg-accent border-accent text-white shadow-[0_0_15px_rgba(20,110,245,0.4)]" 
-                          : "bg-void border-white/10 text-transparent"
+                       del.status.toUpperCase() === "COMPLETED" 
+                         ? "bg-accent border-accent text-white shadow-[0_0_15px_rgba(20,110,245,0.4)]" 
+                         : "bg-void border-white/10 text-transparent"
                       }`}>
-                        <CheckCircle size={16} weight="bold" />
+                       <CheckCircle size={16} weight="bold" />
                       </div>
                       <div className="flex-1">
-                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
-                          <p className={`text-lg font-bold transition-colors ${
-                            del.status === "COMPLETED" ? "text-text-muted/60" : "text-white"
-                          }`}>
-                            {del.title}
-                          </p>
-                          <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full ${
-                            del.status === "COMPLETED" ? "bg-white/5 text-text-muted" : "bg-accent/10 text-accent"
-                          }`}>
-                            {del.status}
-                          </span>
-                        </div>
+                       <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
+                         <p className={`text-lg font-bold transition-colors ${
+                           del.status.toUpperCase() === "COMPLETED" ? "text-text-muted/60" : "text-white"
+                         }`}>
+                           {del.title}
+                         </p>
+                         <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full ${
+                           del.status.toUpperCase() === "COMPLETED" ? "bg-white/5 text-text-muted" : "bg-accent/10 text-accent"
+                         }`}>
+                           {del.status}
+                         </span>
+                       </div>
+
                       </div>
                     </div>
                   ))}

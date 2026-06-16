@@ -69,11 +69,20 @@ export default function ClientSubscriptions() {
                    <Crown size={40} weight="duotone" />
                 </div>
                 <h3 className="text-3xl font-black text-white mb-2">{subscription.plan.name}</h3>
-                <p className="text-4xl font-black text-white mb-6 tracking-tighter">${subscription.plan.price}<span className="text-lg text-text-muted font-medium tracking-normal">/{subscription.plan.interval}</span></p>
-                <div className="flex items-center gap-2 px-4 py-2 bg-success/10 text-success rounded-full font-bold text-xs uppercase tracking-widest">
+                <p className="text-4xl font-black text-white mb-6 tracking-tighter">
+                  ₦{(subscription.amount || 0).toLocaleString()}
+                  <span className="text-lg text-text-muted font-medium tracking-normal">/{subscription.plan.interval}</span>
+                </p>
+                <div className="flex items-center gap-2 px-4 py-2 bg-success/10 text-success rounded-full font-bold text-xs uppercase tracking-widest mb-6">
                    <div className="w-2 h-2 bg-success rounded-full animate-pulse" />
                    {subscription.status}
                 </div>
+
+                {subscription.end_date && (
+                  <div className="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em]">
+                    Expires: {new Date(subscription.end_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                  </div>
+                )}
              </div>
 
              <div className="w-full md:w-2/3 space-y-8">

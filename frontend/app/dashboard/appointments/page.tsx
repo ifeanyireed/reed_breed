@@ -6,40 +6,47 @@ import { Calendar, Clock, VideoCamera } from "phosphor-react"
 import { useAuth } from "@/context/auth-context"
 import { StrokedText } from "@/components/ui/stroked-text"
 import { Button } from "@/components/ui/button"
-import Link from "next/link"
+import { AppointmentModal } from "@/components/ui/appointment-modal"
 
 export default function ClientAppointments() {
   const { getToken } = useAuth()
   const [appointments, setAppointments] = React.useState([])
   const [loading, setLoading] = React.useState(true)
+  const [isModalOpen, setIsModalOpen] = React.useState(false)
+
+  const fetchAppointments = React.useCallback(async () => {
+    try {
+      const token = getToken()
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api'
+      const res = await fetch(`${apiUrl}/appointments`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json'
+        }
+      })
+      if (res.ok) {
+        const data = await res.json()
+        setAppointments(data)
+      }
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setLoading(false)
+    }
+  }, [getToken])
 
   React.useEffect(() => {
-    const fetchAppointments = async () => {
-      try {
-        const token = getToken()
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api'
-        const res = await fetch(`${apiUrl}/appointments`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Accept': 'application/json'
-          }
-        })
-        if (res.ok) {
-          const data = await res.json()
-          setAppointments(data)
-        }
-      } catch (err) {
-        console.error(err)
-      } finally {
-        setLoading(false)
-      }
-    }
     fetchAppointments()
-  }, [getToken])
+  }, [fetchAppointments])
 
   return (
     <div className="space-y-12">
-      <div className="flex justify-between items-end">
+      <AppointmentModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        onSuccess={fetchAppointments}
+      />
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
         <div className="flex flex-col items-start gap-4">
           <span className="text-accent font-black tracking-widest text-xs uppercase">Strategy & Support</span>
           <div className="flex items-center gap-4">
@@ -58,6 +65,7 @@ export default function ClientAppointments() {
             </div>
           </div>
         </div>
+        <Button onClick={() => setIsModalOpen(true)}>Book a Call</Button>
       </div>
 
       <div className="grid grid-cols-1 gap-10">
@@ -68,9 +76,7 @@ export default function ClientAppointments() {
              <Calendar size={48} className="mx-auto text-text-muted mb-6" />
              <p className="text-white font-bold text-xl mb-2">No upcoming meetings</p>
              <p className="text-text-secondary mb-8">Need to discuss your project?</p>
-             <Link href="/contact">
-               <Button>Book a Call</Button>
-             </Link>
+             <Button onClick={() => setIsModalOpen(true)}>Book a Call</Button>
           </div>
         ) : (
           appointments.map((appt: any, pIdx: number) => (

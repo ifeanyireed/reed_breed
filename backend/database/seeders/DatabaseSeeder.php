@@ -60,22 +60,40 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // 2. Subscription Plans
-        $growthPlan = SubscriptionPlan::updateOrCreate(
-            ['name' => 'Growth Plan'],
+        // 2. Subscription Plans (Pricing Tiers)
+        $starterPlan = SubscriptionPlan::updateOrCreate(
+            ['name' => 'Starter'],
             [
-                'price' => 2500,
-                'interval' => 'monthly',
-                'features' => 'AI Automation, Sales CRM, Weekly Strategy Calls, Email Marketing'
+                'price_range' => '₦250k – ₦500k',
+                'interval' => 'one-off',
+                'features' => 'Full Business Audit, Market Scan & Competitor Review, Funnel & Automation Review, Growth Diagnostic Report, Implementation Roadmap'
             ]
         );
 
-        $scalePlan = SubscriptionPlan::updateOrCreate(
-            ['name' => 'Scale Plan'],
+        $growthPlan = SubscriptionPlan::updateOrCreate(
+            ['name' => 'Growth'],
             [
-                'price' => 5000,
+                'price_range' => '₦750k – ₦1.5m',
+                'interval' => 'one-off',
+                'features' => 'Everything in Starter, Brand Positioning & Messaging, Complete Marketing Strategy, Channel & Content Plan, Tailored System Prototype, Investment Proposal'
+            ]
+        );
+
+        $transformationPlan = SubscriptionPlan::updateOrCreate(
+            ['name' => 'Transformation'],
+            [
+                'price_range' => '₦2m – ₦5m+',
+                'interval' => 'one-off',
+                'features' => 'Everything in Growth, Full CRM & Pipeline Setup, Custom Automation Build, Lead Capture System Deploy, Dashboards & BI Setup, Team Handover & Training'
+            ]
+        );
+
+        $retainerPlan = SubscriptionPlan::updateOrCreate(
+            ['name' => 'Retainer'],
+            [
+                'price_range' => '₦400k – ₦1.5m',
                 'interval' => 'monthly',
-                'features' => 'Custom AI Models, Multi-channel Funnels, 24/7 Priority Support, Dedicated Account Manager'
+                'features' => 'Monthly Growth Advisory, Campaign Management, Automation Monitoring, Continuous Optimization, Lead Follow-up Reviews, Monthly Performance Reporting'
             ]
         );
 
@@ -89,7 +107,7 @@ class DatabaseSeeder extends Seeder
 
         UserSubscription::create([
             'user_id' => $client2->id,
-            'plan_id' => $scalePlan->id,
+            'plan_id' => $transformationPlan->id,
             'status' => 'Active',
             'start_date' => now()->subMonths(3),
         ]);
@@ -211,25 +229,30 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // 9. Blog Categories & Posts
-        $cat1 = Category::create(['name' => 'AI Automation', 'slug' => 'ai-automation']);
-        $cat2 = Category::create(['name' => 'Digital Strategy', 'slug' => 'digital-strategy']);
+        $cat1 = Category::updateOrCreate(['slug' => 'ai-automation'], ['name' => 'AI Automation']);
+        $cat2 = Category::updateOrCreate(['slug' => 'digital-strategy'], ['name' => 'Digital Strategy']);
+        $cat3 = Category::updateOrCreate(['slug' => 'promotions'], ['name' => 'Promotions']); // Added for Quicklinks
 
-        BlogPost::create([
-            'category_id' => $cat1->id,
-            'title' => 'The Future of AI in SME Sales',
-            'slug' => 'future-of-ai-sme-sales',
-            'excerpt' => 'How small businesses are leveraging AI to outpace larger competitors.',
-            'content' => 'Full article content about AI automation in sales...',
-            'status' => 'Published',
-        ]);
+        BlogPost::updateOrCreate(
+            ['slug' => 'future-of-ai-sme-sales'],
+            [
+                'category_id' => $cat1->id,
+                'title' => 'The Future of AI in SME Sales',
+                'excerpt' => 'How small businesses are leveraging AI to outpace larger competitors.',
+                'content' => 'Full article content about AI automation in sales...',
+                'status' => 'Published',
+            ]
+        );
 
-        BlogPost::create([
-            'category_id' => $cat2->id,
-            'title' => 'Scaling Your Creative Agency',
-            'slug' => 'scaling-creative-agency',
-            'excerpt' => 'Proven strategies for moving from boutique to global presence.',
-            'content' => 'Full article content about digital strategy for agencies...',
-            'status' => 'Published',
-        ]);
+        BlogPost::updateOrCreate(
+            ['slug' => 'scaling-creative-agency'],
+            [
+                'category_id' => $cat2->id,
+                'title' => 'Scaling Your Creative Agency',
+                'excerpt' => 'Proven strategies for moving from boutique to global presence.',
+                'content' => 'Full article content about digital strategy for agencies...',
+                'status' => 'Published',
+            ]
+        );
     }
 }

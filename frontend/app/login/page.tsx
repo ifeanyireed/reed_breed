@@ -3,6 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
@@ -20,7 +21,8 @@ const loginSchema = z.object({
 type LoginValues = z.infer<typeof loginSchema>
 
 export default function LoginPage() {
-  const { login } = useAuth()
+  const { login, user, loading } = useAuth()
+  const router = useRouter()
   const { 
     register, 
     handleSubmit, 
@@ -28,6 +30,12 @@ export default function LoginPage() {
   } = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
   })
+
+  React.useEffect(() => {
+    if (!loading && user) {
+      router.push(user.role === 'admin' ? '/admin' : '/dashboard')
+    }
+  }, [user, loading, router])
 
   const onSubmit = async (data: LoginValues) => {
     try {

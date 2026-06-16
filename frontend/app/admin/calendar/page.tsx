@@ -73,6 +73,20 @@ export default function CalendarPage() {
     }
   }
 
+  const updateMeetingUrl = async (id: number, url: string) => {
+    try {
+      const res = await apiRequest(`/appointments/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ meeting_url: url })
+      }, getToken())
+      if (res.ok) {
+        setAppointments(prev => prev.map(a => a.id === id ? { ...a, meeting_url: url } : a))
+      }
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   const deleteAppointment = async (id: number) => {
     if (!window.confirm("Delete this appointment?")) return
     try {
@@ -246,17 +260,29 @@ export default function CalendarPage() {
                        </span>
                     </div>
                     <p className="text-sm text-text-muted">{appt.email} • {appt.type}</p>
-                    {appt.meeting_url && (
-                      <a 
-                        href={appt.meeting_url} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 mt-2 px-3 py-1 bg-accent/10 text-accent rounded-lg text-xs font-bold hover:bg-accent hover:text-white transition-all"
-                      >
-                        <VideoCamera size={14} />
-                        Join Call
-                      </a>
-                    )}
+                    
+                    <div className="mt-4 flex flex-col gap-2">
+                       <div className="flex items-center gap-2">
+                          <input 
+                            type="text" 
+                            placeholder="Add meeting link (Zoom, Google Meet...)"
+                            defaultValue={appt.meeting_url || ''}
+                            onBlur={(e) => updateMeetingUrl(appt.id, e.target.value)}
+                            className="bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-xs text-white focus:outline-none focus:border-accent w-full max-w-sm"
+                          />
+                          {appt.meeting_url && (
+                            <a 
+                              href={appt.meeting_url} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="p-2 bg-accent/10 text-accent rounded-lg hover:bg-accent hover:text-white transition-all"
+                            >
+                              <VideoCamera size={14} />
+                            </a>
+                          )}
+                       </div>
+                    </div>
+
                     {appt.notes && <p className="text-xs text-text-secondary mt-2 line-clamp-1 italic">"{appt.notes}"</p>}
                   </div>
                 </div>

@@ -4,20 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Invoice extends Model
+class SupportTicket extends Model
 {
     protected $fillable = [
         'user_id',
-        'plan_id',
-        'amount',
+        'subject',
+        'category',
         'status',
-        'due_date',
-        'pdf_url',
-    ];
-
-    protected $casts = [
-        'due_date' => 'datetime',
+        'priority',
     ];
 
     public function user(): BelongsTo
@@ -25,8 +21,8 @@ class Invoice extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function plan(): BelongsTo
+    public function messages(): HasMany
     {
-        return $this->belongsTo(SubscriptionPlan::class);
+        return $this->hasMany(TicketMessage::class, 'ticket_id');
     }
 }

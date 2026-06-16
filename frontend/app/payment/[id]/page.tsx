@@ -7,13 +7,21 @@ import { Navbar } from "@/components/layout/navbar"
 import { Footer } from "@/components/layout/footer"
 import { Button } from "@/components/ui/button"
 import { CreditCard, ShieldCheck, Receipt } from "phosphor-react"
+import dynamic from "next/dynamic"
+
+const PaystackIntegration = dynamic(
+  () => import("@/components/payment/paystack-integration"),
+  { ssr: false }
+)
 
 export default function PaymentPage() {
   const { id } = useParams()
-  const { user, loading } = useAuth()
+  const { user, loading, getToken } = useAuth()
   const router = useRouter()
   const [invoice, setInvoice] = React.useState<any>(null)
-  const [isProcessing, setIsProcessing] = React.useState(false)
+
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api'
+  const token = getToken()
 
   React.useEffect(() => {
     if (!loading && !user) {
@@ -23,48 +31,26 @@ export default function PaymentPage() {
 
     const fetchInvoice = async () => {
       try {
-        const res = await fetch(`http://localhost:8080/api/client/invoice?id=${id}`)
+        const res = await fetch(`${API_URL}/invoices/${id}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        })
         if (res.ok) {
           const data = await res.json()
           setInvoice(data)
+        } else {
+          console.error("Failed to fetch invoice", await res.text())
         }
       } catch (err) {
         console.error(err)
       }
     }
 
-    if (user) {
+    if (user && token) {
       fetchInvoice()
     }
-  }, [id, user, loading, router])
-
-  const handlePay = async () => {
-    setIsProcessing(true)
-    // Simulate Paystack Inline logic
-    // In a real app, you'd load the script and call PaystackPop.setup(...)
-    
-    // Simulate successful payment callback
-    setTimeout(async () => {
-      try {
-        await fetch("http://localhost:8080/api/webhooks/paystack", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            event: "charge.success",
-            data: {
-              reference: "T" + Math.random().toString(36).substring(7).toUpperCase(),
-              metadata: { invoice_id: id }
-            }
-          })
-        })
-        router.push("/dashboard")
-      } catch (err) {
-        console.error("Fulfillment failed", err)
-      } finally {
-        setIsProcessing(false)
-      }
-    }, 2000)
-  }
+  }, [id, user, loading, router, token, API_URL])
 
   if (loading || !invoice) {
     return (
@@ -76,8 +62,7 @@ export default function PaymentPage() {
 
   return (
     <>
-      <Navbar />
-      <main className="min-h-screen pt-32 pb-20 bg-void flex items-center justify-center px-6">
+      <main className="min-h-screen pt-20 pb-20 bg-void flex items-center justify-center px-6">
         <div className="glass-card w-full max-w-xl p-8 lg:p-12 rounded-2xl border-white/5 relative overflow-hidden">
           <div className="absolute top-0 right-0 p-8 opacity-5">
             <Receipt size={160} weight="duotone" className="text-accent" />
@@ -95,11 +80,11 @@ export default function PaymentPage() {
               <div className="flex justify-between items-end border-b border-white/5 pb-6">
                 <div>
                   <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-1">Selected Plan</p>
-                  <p className="text-p-lg font-bold text-white uppercase">{invoice.plan}</p>
+                  <p className="text-p-lg font-bold text-white uppercase">{invoice.plan?.name}</p>
                 </div>
                 <div className="text-right">
                   <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-1">Total Due</p>
-                  <p className="text-h3 font-black text-accent">₦{(invoice.amount / 100).toLocaleString()}</p>
+                  <p className="text-h3 font-black text-accent">₦{(invoice.amount).toLocaleString()}</p>
                 </div>
               </div>
 
@@ -115,22 +100,7 @@ export default function PaymentPage() {
               </div>
             </div>
 
-            <div className="space-y-4">
-              <Button 
-                className="w-full h-16 text-lg gap-3" 
-                onClick={handlePay}
-                disabled={isProcessing}
-              >
-                {isProcessing ? (
-                  <>Processing...</>
-                ) : (
-                  <>Pay Now with Paystack <CreditCard weight="bold" /></>
-                )}
-              </Button>
-              <div className="flex items-center justify-center gap-2 text-[10px] text-text-muted uppercase font-bold tracking-widest">
-                <ShieldCheck className="text-success" /> Secured by Paystack & Reed Breed
-              </div>
-            </div>
+            <PaystackIntegration invoice={invoice} user={user} id={id} />
           </div>
         </div>
       </main>

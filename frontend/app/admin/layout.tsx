@@ -15,7 +15,8 @@ import {
   Briefcase,
   Crown,
   Receipt,
-  Star
+  Star,
+  ChatCircleDots
 } from "phosphor-react"
 
 import { ProtectedRoute } from "@/components/auth/protected-route"
@@ -24,8 +25,8 @@ import { useAuth } from "@/context/auth-context"
 const sidebarItems = [
   { label: "Leads Funnel", icon: Users, href: "/admin" },
   { label: "Client Projects", icon: Briefcase, href: "/admin/projects" },
-  { label: "Subscriptions", icon: Crown, href: "/admin/subscriptions" },
   { label: "Invoices", icon: Receipt, href: "/admin/invoices" },
+  { label: "Support Tickets", icon: ChatCircleDots, href: "/admin/support" },
   { label: "Reviews", icon: Star, href: "/admin/reviews" },
   { label: "Blog CMS", icon: Article, href: "/admin/blog" },
   { label: "Calendar", icon: Calendar, href: "/admin/calendar" },

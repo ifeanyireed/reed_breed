@@ -24,20 +24,53 @@ model User {
   invoices      Invoice[]
   reviews       Review[]
   appointments  Appointment[]
+  supportTickets SupportTicket[]
+  ticketMessages TicketMessage[]
 
   @@map("users")
 }
 
+model SupportTicket {
+  id        Int             @id @default(autoincrement())
+  userId    Int             @map("user_id")
+  user      User            @relation(fields: [userId], references: [id])
+  subject   String
+  category  String          @default("General") // General, Technical, Billing, Project
+  status    String          @default("Open") // Open, In Progress, Resolved, Closed
+  priority  String          @default("Medium") // Low, Medium, High, Urgent
+  messages  TicketMessage[]
+  createdAt DateTime        @default(now()) @map("created_at")
+  updatedAt DateTime        @updatedAt @map("updated_at")
+
+  @@map("support_tickets")
+}
+
+model TicketMessage {
+  id        Int           @id @default(autoincrement())
+  ticketId  Int           @map("ticket_id")
+  ticket    SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  userId    Int           @map("user_id")
+  user      User          @relation(fields: [userId], references: [id])
+  message   String
+  isRead    Boolean       @default(false) @map("is_read")
+  createdAt DateTime      @default(now()) @map("created_at")
+  updatedAt DateTime      @updatedAt @map("updated_at")
+
+  @@map("ticket_messages")
+}
+
 model Invoice {
-  id        Int      @id @default(autoincrement())
-  userId    Int      @map("user_id")
-  user      User     @relation(fields: [userId], references: [id])
+  id        Int               @id @default(autoincrement())
+  userId    Int               @map("user_id")
+  user      User              @relation(fields: [userId], references: [id])
+  planId    Int?              @map("plan_id")
+  plan      SubscriptionPlan? @relation(fields: [planId], references: [id])
   amount    Float
-  status    String   @default("Pending") // Pending, Paid, Overdue
-  dueDate   DateTime @map("due_date")
-  pdfUrl    String?  @map("pdf_url")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  status    String            @default("Pending") // Pending, Paid, Overdue
+  dueDate   DateTime          @map("due_date")
+  pdfUrl    String?           @map("pdf_url")
+  createdAt DateTime          @default(now()) @map("created_at")
+  updatedAt DateTime          @updatedAt @map("updated_at")
 
   @@map("invoices")
 }
@@ -88,11 +121,12 @@ model SubscriptionPlan {
   id            Int                @id @default(autoincrement())
   name          String
   price         Float
-  interval      String             @default("monthly") // monthly, yearly
+  interval      String             @default("monthly") // monthly, yearly, one-off
   features      String? // JSON string or comma-separated
   createdAt     DateTime           @default(now()) @map("created_at")
   updatedAt     DateTime           @updatedAt @map("updated_at")
   subscriptions UserSubscription[]
+  invoices      Invoice[]
 
   @@map("subscription_plans")
 }
@@ -103,6 +137,7 @@ model UserSubscription {
   user          User             @relation(fields: [userId], references: [id])
   planId        Int              @map("plan_id")
   plan          SubscriptionPlan @relation(fields: [planId], references: [id])
+  amount        Float            @default(0)
   status        String           @default("Active") // Active, Cancelled, Expired
   startDate     DateTime         @default(now()) @map("start_date")
   endDate       DateTime?        @map("end_date")

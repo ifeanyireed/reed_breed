@@ -21,8 +21,10 @@ export function ProtectedRoute({
     }
 
     if (!loading && user && requiredRole && user.role !== requiredRole) {
-      // If user is not admin but trying to access admin, redirect to dashboard
-      if (user.role !== 'admin' && pathname.startsWith('/admin')) {
+      // Cross-role protection: If admin tries to access client or vice-versa
+      if (user.role === 'admin') {
+        router.push('/admin')
+      } else {
         router.push('/dashboard')
       }
     }

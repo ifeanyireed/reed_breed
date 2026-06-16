@@ -12,7 +12,8 @@ import {
   Star,
   SignOut,
   Crown,
-  Calendar
+  Calendar,
+  ChatCircleDots
 } from "phosphor-react"
 
 import { ProtectedRoute } from "@/components/auth/protected-route"
@@ -24,6 +25,7 @@ const sidebarItems = [
   { label: "Job Progress", icon: Briefcase, href: "/dashboard/jobs" },
   { label: "Appointments", icon: Calendar, href: "/dashboard/appointments" },
   { label: "Invoices", icon: Receipt, href: "/dashboard/invoices" },
+  { label: "Support", icon: ChatCircleDots, href: "/dashboard/support" },
   { label: "Reviews", icon: Star, href: "/dashboard/reviews" },
 ]
 

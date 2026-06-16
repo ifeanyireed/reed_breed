@@ -81,9 +81,9 @@ export const Footer = () => {
 
       {/* Bottom Section - Brand & Info */}
       <div className="bg-void text-text-secondary pt-20 md:pt-24 pb-0 px-6 md:px-12 lg:px-24">
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-20 lg:gap-32 mb-16 md:mb-20">
+        <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-12 lg:gap-24 mb-16 md:mb-20">
           {/* Left Side */}
-          <div className="flex flex-col items-start">
+          <div className="flex flex-col items-start md:col-span-1">
             <Link href="/" className="mb-6">
               <Image
                 src="/logo.png"
@@ -116,8 +116,30 @@ export const Footer = () => {
             </div>
           </div>
 
+          {/* Quicklinks - Middle Section */}
+          <div className="flex flex-col items-start md:col-span-1">
+             <h4 className="text-white font-bold uppercase tracking-widest text-xs mb-8">Quicklinks</h4>
+             <div className="flex flex-col gap-4">
+                <Link href="/pricing" className="text-lg md:text-xl font-medium text-text-muted hover:text-accent transition-colors tracking-tighter leading-[1.1]">
+                   Pricing
+                </Link>
+                <Link href="/contact" className="text-lg md:text-xl font-medium text-text-muted hover:text-accent transition-colors tracking-tighter leading-[1.1]">
+                   Book a Demo
+                </Link>
+                <Link href="/contact" className="text-lg md:text-xl font-medium text-text-muted hover:text-accent transition-colors tracking-tighter leading-[1.1]">
+                   Request an Audit
+                </Link>
+                <Link href="/blog?category=promotions" className="text-lg md:text-xl font-medium text-text-muted hover:text-accent transition-colors tracking-tighter leading-[1.1]">
+                   View Promotions
+                </Link>
+                <Link href="/contact" className="text-lg md:text-xl font-medium text-text-muted hover:text-accent transition-colors tracking-tighter leading-[1.1]">
+                   Request a Visit
+                </Link>
+             </div>
+          </div>
+
           {/* Right Side */}
-          <div className="flex flex-col items-start md:ml-auto text-left w-full md:w-max">
+          <div className="flex flex-col items-start md:ml-auto text-left w-full md:w-max md:col-span-1">
             <p
               className="text-lg md:text-xl font-medium text-white tracking-tighter leading-[1.1] max-w-[280px]"
               style={{ marginBottom: '40px' }}

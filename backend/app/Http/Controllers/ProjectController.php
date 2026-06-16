@@ -10,6 +10,15 @@ use Illuminate\Support\Facades\Auth;
 class ProjectController extends Controller
 {
     /**
+     * Get all clients (Admin only).
+     */
+    public function getClients()
+    {
+        $clients = \App\Models\User::where('role', 'client')->get();
+        return response()->json($clients);
+    }
+
+    /**
      * Display a listing of projects (Admin: all, Client: own).
      */
     public function index(Request $request)
