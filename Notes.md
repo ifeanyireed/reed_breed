@@ -75,3 +75,40 @@ To run your new Laravel PHP backend locally, you just need to use Laravel's buil
        * Upload everything inside the out folder directly into your public_html directory.
        * Crucial Step: Upload the .htaccess.production file I created for you and rename it to exactly .htaccess in that same
          public_html folder. This ensures your routes like /dashboard and /payment/4 work correctly when refreshed.
+
+
+
+         Perfect! Here is the exact command for your terminal. Copy
+  and paste this:
+
+   1 ssh -p 65002 u560700323@157.173.209.227
+
+  Quick Checklist for when you are logged in:
+
+  Once you hit Enter and type your password (remember, you
+  won't see the letters as you type), run these commands to
+  finish the backend setup:
+
+   1. Go to your backend folder:
+   1     cd backend
+   2. Install the "Engine" (Composer):
+
+   1     composer install --optimize-autoloader --no-dev
+   3. Optimize for Speed:
+
+   1     php artisan optimize
+   4. Create the Storage Link (for images):
+
+   1     php artisan storage:link
+
+  ---
+
+  Don't forget the Frontend!
+  Before you finish today, remember that you need to:
+   1. Update frontend/.env.production to
+      https://reedbreed.cc/api.
+   2. Run npm run build in the frontend folder.
+   3. Re-upload the new out folder to Hostinger.
+
+
+php artisan tinker --execute="\$u = \App\Models\User::where('email','admin@reedbreed.cc')->first(); if(\$u) { \$u->password = Hash::make('admin123'); \$u->save(); }"
